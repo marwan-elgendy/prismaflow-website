@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "about": "من نحن",
+    "services": "كيف نعمل",
+    "blog": "المدونة",
+    "apply": "اعمل معنا"
+  },
+  "hero": {
+    "badge": "وكالة التسويق العصبي",
+    "cta_primary": "ابدأ هندسة حملتك الآن",
+    "cta_secondary": "حمّل خريطة هندسة الرغبة (مجاناً)"
+  },
+  "common": {
+    "readMore": "اقرأ المزيد",
+    "backToBlog": "→ العودة للمدونة",
+    "loading": "جاري التحميل...",
+    "apply_now": "قدم الآن"
+  },
+  "footer": {
+    "tagline": "نهندس الرغبة",
+    "rights": "© 2025 PrismaFlow. جميع الحقوق محفوظة.",
+    "newsletter_heading": "ابق في مقدمة علم النفس التسويقي",
+    "newsletter_placeholder": "بريدك الإلكتروني",
+    "newsletter_cta": "اشترك"
+  },
+  "seo": {
+    "default_title": "PrismaFlow — وكالة التسويق العصبي",
+    "default_description": "نستخدم علم الأعصاب وعلم النفس لهندسة الرغبة وتحويل علامتك التجارية إلى ضرورة لا تُقاوم. ضاعف مبيعاتك مع PrismaFlow."
+  }
+}
