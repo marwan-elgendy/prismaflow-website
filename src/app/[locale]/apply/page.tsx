@@ -33,11 +33,16 @@ export default async function ApplyPage({
 
   return (
     <div className="pt-20 pb-32">
-      <section className="py-24 text-center px-6 max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-6xl font-black text-[color:var(--color-white)] leading-tight mb-8">
+      <section className="relative py-24 text-center px-6 max-w-4xl mx-auto overflow-hidden">
+        {/* Decorative prism */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none hidden lg:block">
+          <PrismDecoration size={180} opacity={0.12} />
+        </div>
+
+        <h1 className="relative z-10 text-5xl md:text-6xl font-black text-[color:var(--color-white)] leading-tight mb-8">
           <GlowText intensity="medium">{headline}</GlowText>
         </h1>
-        <div className="max-w-2xl mx-auto bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg p-8 text-left rtl:text-right">
+        <div className="relative z-10 max-w-2xl mx-auto bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg p-8 text-left rtl:text-right">
           <p className="text-[color:var(--color-gray-400)] leading-relaxed">{exclusionText}</p>
         </div>
       </section>
