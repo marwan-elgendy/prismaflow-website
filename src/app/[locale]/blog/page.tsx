@@ -4,8 +4,30 @@ import { allPostsQuery } from '@/lib/queries'
 import BlogGrid from '@/components/blog/BlogGrid'
 import GlowText from '@/components/effects/GlowText'
 
-export const metadata: Metadata = {
-  title: 'Blog',
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const isAr = locale === 'ar'
+  return {
+    title: {
+      absolute: isAr
+        ? 'مدونة التسويق العصبي — علم النفس والإقناع وسلوك المستهلك | PrismaFlow'
+        : 'Neuromarketing Blog — Psychology, Persuasion & Consumer Behavior | PrismaFlow',
+    },
+    description: isAr
+      ? 'رؤى تسويقية مدعومة بعلم الأعصاب. تعلّم كيفية استخدام علم النفس والإقناع لمضاعفة مبيعاتك وسيطرة على سوقك.'
+      : 'Neuroscience-backed marketing insights. Learn how to use psychology and persuasion to double your sales and dominate your market.',
+    alternates: {
+      canonical: `https://prismaflow.net/${locale}/blog`,
+    },
+    openGraph: {
+      title: isAr ? 'مدونة التسويق العصبي | PrismaFlow' : 'Neuromarketing Blog | PrismaFlow',
+      images: [{ url: 'https://prismaflow.net/blog-og.jpg', width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default async function BlogPage({

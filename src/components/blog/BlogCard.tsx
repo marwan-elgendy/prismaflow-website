@@ -21,7 +21,7 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
   const title = (locale === 'ar' ? post.title.ar : post.title.en) || ''
   const excerpt = (locale === 'ar' ? post.excerpt?.ar : post.excerpt?.en) || ''
   const imageUrl = post.mainImage?.asset?.url
-  const imageAlt = (locale === 'ar' ? post.mainImage?.alt?.ar : post.mainImage?.alt?.en) || title
+  const imageAlt = `${title} — PrismaFlow Neuromarketing Blog`
   const date = post.publishedAt ? formatDate(post.publishedAt, locale) : ''
   const readMore = locale === 'ar' ? 'اقرأ المزيد ←' : 'Read More →'
 
@@ -41,6 +41,7 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
             <Image
               src={imageUrl}
               alt={imageAlt}
+              title={title}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"

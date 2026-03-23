@@ -23,13 +23,82 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params
   const post = await client.fetch(postBySlugQuery, { slug }).catch(() => null)
   if (!post) return {}
-  const title = (locale === 'ar' ? post.title.ar : post.title.en) || ''
-  const description = (locale === 'ar' ? post.excerpt?.ar : post.excerpt?.en) || ''
+  const isAr = locale === 'ar'
+  const title = (isAr ? post.title?.ar : post.title?.en) || ''
+  const description = (isAr ? post.excerpt?.ar : post.excerpt?.en) || ''
+  const imageUrl = post.mainImage?.asset?.url
   return {
-    title,
+    title: {
+      absolute: `${title} | PrismaFlow`,
+    },
     description,
-    openGraph: { title, description },
+    alternates: {
+      canonical: `https://prismaflow.net/${locale}/blog/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      publishedTime: post.publishedAt,
+      authors: [(isAr ? post.author?.ar : post.author?.en) || 'PrismaFlow'],
+      images: imageUrl
+        ? [{ url: imageUrl, width: 1200, height: 630, alt: `${title} — PrismaFlow Neuromarketing Blog` }]
+        : [{ url: 'https://prismaflow.net/blog-og.jpg', width: 1200, height: 630 }],
+    },
   }
+}
+
+function ArticleSchema({
+  title,
+  description,
+  imageUrl,
+  publishedAt,
+  author,
+  slug,
+  locale,
+}: {
+  title: string
+  description: string
+  imageUrl?: string
+  publishedAt?: string
+  author?: string
+  slug: string
+  locale: string
+}) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    image: imageUrl || 'https://prismaflow.net/blog-og.jpg',
+    datePublished: publishedAt,
+    dateModified: publishedAt,
+    author: {
+      '@type': 'Person',
+      name: author || 'PrismaFlow',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'PrismaFlow',
+      url: 'https://prismaflow.net',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://prismaflow.net/logo.png',
+      },
+    },
+    url: `https://prismaflow.net/${locale}/blog/${slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://prismaflow.net/${locale}/blog/${slug}`,
+    },
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -39,15 +108,26 @@ export default async function BlogPostPage({ params }: Props) {
   const post = await client.fetch(postBySlugQuery, { slug }).catch(() => null)
   if (!post) notFound()
 
-  const title = (isAr ? post.title.ar : post.title.en) || ''
+  const title = (isAr ? post.title?.ar : post.title?.en) || ''
   const body = isAr ? post.body?.ar : post.body?.en
   const imageUrl = post.mainImage?.asset?.url
-  const imageAlt = (isAr ? post.mainImage?.alt?.ar : post.mainImage?.alt?.en) || title
+  const imageAlt = `${title} — PrismaFlow Neuromarketing Blog`
   const date = post.publishedAt ? formatDate(post.publishedAt, locale) : ''
   const author = (isAr ? post.author?.ar : post.author?.en) || ''
+  const description = (isAr ? post.excerpt?.ar : post.excerpt?.en) || ''
 
   return (
     <article className="pt-20 pb-32">
+      <ArticleSchema
+        title={title}
+        description={description}
+        imageUrl={imageUrl}
+        publishedAt={post.publishedAt}
+        author={author}
+        slug={slug}
+        locale={locale}
+      />
+
       {/* Hero */}
       <div className="max-w-4xl mx-auto px-6 py-16 text-center">
         {post.categories?.length && (
@@ -65,7 +145,9 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="flex items-center justify-center gap-4 text-sm text-[color:var(--color-gray-400)]">
           {author && <span>{author}</span>}
           {date && <span>·</span>}
-          {date && <span>{date}</span>}
+          {date && (
+            <time dateTime={post.publishedAt}>{date}</time>
+          )}
         </div>
       </div>
 
@@ -74,6 +156,7 @@ export default async function BlogPostPage({ params }: Props) {
           <Image
             src={imageUrl}
             alt={imageAlt}
+            title={title}
             fill
             sizes="(max-width: 768px) 100vw, 1024px"
             className="object-cover"
@@ -98,7 +181,7 @@ export default async function BlogPostPage({ params }: Props) {
             href={`/${locale}/blog`}
             className="text-[color:var(--color-cyan)] hover:underline text-sm"
           >
-            {isAr ? '→ العودة للمدونة' : '← Back to Blog'}
+            {isAr ? '→ العودة إلى مدونة التسويق العصبي' : '← Back to Neuromarketing Blog'}
           </Link>
         </div>
       </div>

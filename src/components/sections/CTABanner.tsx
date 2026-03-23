@@ -60,7 +60,7 @@ export default function CTABanner({ locale }: { locale: string }) {
               : "Stop burning your budget. Start engineering desire today."}
           </p>
           <Button variant="primary" size="lg" href={`/${locale}/apply`}>
-            {isAr ? 'قدّم طلبك الآن' : 'Apply Now →'}
+            {isAr ? 'قدّم طلبك لهندسة تسويقك' : 'Apply to Engineer Your Marketing →'}
           </Button>
         </motion.div>
       </div>

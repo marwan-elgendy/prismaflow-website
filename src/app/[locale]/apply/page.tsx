@@ -5,8 +5,30 @@ import ApplicationForm from '@/components/forms/ApplicationForm'
 import GlowText from '@/components/effects/GlowText'
 import PrismDecoration from '@/components/effects/PrismDecoration'
 
-export const metadata: Metadata = {
-  title: 'Work With Us',
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const isAr = locale === 'ar'
+  return {
+    title: {
+      absolute: isAr
+        ? 'اعمل مع PrismaFlow — قدم طلبك لهندسة تسويقك'
+        : 'Work With PrismaFlow — Apply to Engineer Your Marketing',
+    },
+    description: isAr
+      ? 'نعمل فقط مع العملاء الجادين. قدّم طلبك الآن لتبدأ رحلة هندسة الرغبة ومضاعفة مبيعاتك مع وكالة التسويق العصبي الرائدة.'
+      : 'We only work with serious clients. Apply now to start engineering desire and multiplying your sales with the leading neuromarketing agency.',
+    alternates: {
+      canonical: `https://prismaflow.net/${locale}/apply`,
+    },
+    openGraph: {
+      title: isAr ? 'قدّم طلبك | PrismaFlow' : 'Apply Now | PrismaFlow',
+      images: [{ url: 'https://prismaflow.net/og-image.jpg', width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default async function ApplyPage({
