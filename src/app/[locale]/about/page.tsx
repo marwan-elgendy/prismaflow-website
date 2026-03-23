@@ -3,9 +3,34 @@ import { client } from '@/lib/sanity'
 import { aboutPageQuery } from '@/lib/queries'
 import GlowText from '@/components/effects/GlowText'
 import Button from '@/components/ui/Button'
+import PrismDecoration from '@/components/effects/PrismDecoration'
 
-export const metadata: Metadata = {
-  title: 'About',
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const isAr = locale === 'ar'
+  return {
+    title: {
+      absolute: isAr
+        ? 'من نحن — PrismaFlow وكالة التسويق العصبي التي تهندس الرغبة'
+        : 'About PrismaFlow — The Neuromarketing Agency That Engineers Desire',
+    },
+    description: isAr
+      ? 'تعرّف على PrismaFlow، وكالة التسويق العصبي التي تحوّل علامتك التجارية من خيار إلى ضرورة لا تُقاوم. علم النفس + الإبداع = مبيعات حقيقية.'
+      : 'Meet PrismaFlow, the neuromarketing agency that turns your brand from an option into an irresistible necessity. Psychology + creativity = real sales. Learn our story.',
+    alternates: {
+      canonical: `https://prismaflow.net/${locale}/about`,
+    },
+    openGraph: {
+      title: isAr
+        ? 'من نحن — PrismaFlow وكالة التسويق العصبي'
+        : 'About PrismaFlow — The Neuromarketing Agency That Engineers Desire',
+      images: [{ url: 'https://prismaflow.net/og-image.jpg', width: 1200, height: 630 }],
+    },
+  }
 }
 
 export default async function AboutPage({
@@ -49,17 +74,24 @@ export default async function AboutPage({
   return (
     <div className="pt-20">
       {/* Hero */}
-      <section className="py-32 px-6 text-center max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-black leading-tight mb-8 text-[color:var(--color-white)]">
-          {heroHeadline.split('Vanilla').map((part: string, i: number) =>
-            i === 0 ? (
-              <span key={i}>{part}<GlowText>Vanilla</GlowText></span>
-            ) : (
-              <span key={i}>{part}</span>
-            )
-          )}
-        </h1>
-        <p className="text-xl text-[color:var(--color-gray-400)] leading-relaxed">{heroSub}</p>
+      <section className="relative py-32 px-6 max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12" aria-label={isAr ? 'مقدمة من نحن' : 'About hero'}>
+        <div className="flex-1 text-center lg:text-left">
+          <h1 className="text-5xl md:text-7xl font-black leading-tight mb-8 text-[color:var(--color-white)]">
+            {heroHeadline.split('Vanilla').map((part: string, i: number) =>
+              i === 0 ? (
+                <span key={i}>{part}<GlowText>Vanilla</GlowText></span>
+              ) : (
+                <span key={i}>{part}</span>
+              )
+            )}
+          </h1>
+          <p className="text-xl text-[color:var(--color-gray-400)] leading-relaxed">{heroSub}</p>
+        </div>
+
+        {/* PrismDecoration on right side */}
+        <div className="hidden lg:flex items-center justify-center flex-shrink-0">
+          <PrismDecoration size={220} opacity={0.18} />
+        </div>
       </section>
 
       {/* Story */}
@@ -70,15 +102,34 @@ export default async function AboutPage({
         </div>
       </section>
 
-      {/* Philosophy quote */}
-      <section className="py-32 px-6 text-center">
-        <blockquote className="text-5xl md:text-7xl font-black text-[color:var(--color-white)] max-w-4xl mx-auto leading-tight">
-          <GlowText intensity="high">&ldquo;{quote}&rdquo;</GlowText>
-        </blockquote>
-        <div className="mt-12">
-          <Button variant="primary" size="lg" href={`/${locale}/apply`}>
-            {ctaLabel}
-          </Button>
+      {/* Philosophy quote — dramatic full-width */}
+      <section className="relative py-32 px-6 overflow-hidden">
+        {/* Giant cyan quotation mark behind */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none select-none leading-none"
+          style={{
+            fontSize: 'clamp(8rem, 25vw, 20rem)',
+            color: 'rgba(0,200,255,0.07)',
+            fontFamily: 'Georgia, serif',
+            lineHeight: 0.8,
+          }}
+          aria-hidden="true"
+        >
+          &ldquo;
+        </div>
+
+        <div className="relative z-10 text-center max-w-6xl mx-auto">
+          <blockquote
+            className="font-black text-[color:var(--color-white)] leading-tight"
+            style={{ fontSize: 'clamp(2.5rem, 6vw, 6.5rem)' }}
+          >
+            <GlowText intensity="high">&ldquo;{quote}&rdquo;</GlowText>
+          </blockquote>
+          <div className="mt-12">
+            <Button variant="primary" size="lg" href={`/${locale}/apply`}>
+              {ctaLabel}
+            </Button>
+          </div>
         </div>
       </section>
     </div>

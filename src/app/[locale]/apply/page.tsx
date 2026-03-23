@@ -3,6 +3,7 @@ import { client } from '@/lib/sanity'
 import { applyPageQuery } from '@/lib/queries'
 import ApplicationForm from '@/components/forms/ApplicationForm'
 import GlowText from '@/components/effects/GlowText'
+import PrismDecoration from '@/components/effects/PrismDecoration'
 
 export const metadata: Metadata = {
   title: 'Work With Us',

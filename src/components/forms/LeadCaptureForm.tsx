@@ -2,21 +2,29 @@
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
 
-// TODO: Wire to email marketing platform (e.g., Mailchimp, ConvertKit) before going live
-
 export default function LeadCaptureForm({ locale, ctaLabel }: { locale: string; ctaLabel?: string }) {
   const isAr = locale === 'ar'
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const inputClass =
     'w-full bg-[rgba(255,255,255,0.05)] border border-[color:var(--color-border)] text-[color:var(--color-white)] placeholder-[color:var(--color-gray-400)] px-4 py-3 rounded-sm focus:outline-none focus:border-[color:var(--color-cyan)] transition-colors text-sm'
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Lead capture:', { name, email })
-    setSubmitted(true)
+    setLoading(true)
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, locale }),
+      })
+    } finally {
+      setLoading(false)
+      setSubmitted(true)
+    }
   }
 
   if (submitted) {
@@ -47,8 +55,15 @@ export default function LeadCaptureForm({ locale, ctaLabel }: { locale: string; 
         onChange={(e) => setEmail(e.target.value)}
         className={inputClass}
       />
-      <Button type="submit" variant="primary" size="lg" className="w-full justify-center">
-        {ctaLabel || (isAr ? 'احصل على الدليل مجاناً' : 'Get the Free Guide')}
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        className={`w-full justify-center ${loading ? 'opacity-70 pointer-events-none' : ''}`}
+      >
+        {loading
+          ? (isAr ? 'جارٍ الإرسال...' : 'Submitting...')
+          : (ctaLabel || (isAr ? 'احصل على الدليل مجاناً' : 'Get the Free Guide'))}
       </Button>
     </form>
   )

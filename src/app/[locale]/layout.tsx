@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import NeuralBackground from '@/components/effects/NeuralBackground'
+import NeuralBackgroundClient from '@/components/effects/NeuralBackgroundClient'
 import '../globals.css'
 
 const spaceGrotesk = Space_Grotesk({
@@ -45,8 +45,17 @@ export async function generateMetadata({
       locale: locale === 'ar' ? 'ar_SA' : 'en_US',
     },
     alternates: {
-      canonical: '/',
-      languages: { en: '/en', ar: '/ar' },
+      canonical: `https://prismaflow.net/${locale}`,
+      languages: {
+        'en': 'https://prismaflow.net/en',
+        'ar': 'https://prismaflow.net/ar',
+        'x-default': 'https://prismaflow.net/en',
+      },
+    },
+    other: {
+      'theme-color': '#0D0D10',
+      'color-scheme': 'dark',
+      'format-detection': 'telephone=no',
     },
   }
 }
@@ -78,7 +87,7 @@ export default async function LocaleLayout({
     >
       <body className="bg-[color:var(--color-bg)] text-[color:var(--color-white)] min-h-screen">
         <NextIntlClientProvider messages={messages}>
-          <NeuralBackground />
+          <NeuralBackgroundClient />
           <Navbar />
           <main className="relative z-10">{children}</main>
           <Footer />

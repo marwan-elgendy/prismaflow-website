@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import GlowText from '@/components/effects/GlowText'
+import { ChevronDown } from 'lucide-react'
 
 interface HeroData {
   headline?: { en?: string; ar?: string }
@@ -54,6 +55,20 @@ export default function HeroSection({ data, locale, primaryCTALabel, secondaryCT
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Animated gradient orb */}
+      <motion.div
+        className="absolute left-1/4 top-1/2 -translate-y-1/2 pointer-events-none"
+        animate={{ scale: [1, 1.15, 1] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          width: 600,
+          height: 600,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 70%)',
+          filter: 'blur(60px)',
+        }}
+      />
+
       <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
         <motion.div variants={stagger} initial="initial" animate="animate">
           <motion.div variants={fadeUp} className="mb-6">
@@ -64,7 +79,7 @@ export default function HeroSection({ data, locale, primaryCTALabel, secondaryCT
 
           <motion.h1
             variants={fadeUp}
-            className="text-5xl md:text-7xl font-bold leading-tight mb-6 text-[color:var(--color-white)]"
+            className="text-6xl md:text-8xl font-bold leading-tight mb-6 text-[color:var(--color-white)]"
           >
             {headline}{' '}
             <GlowText intensity="high">{f.highlight}</GlowText>
@@ -85,6 +100,23 @@ export default function HeroSection({ data, locale, primaryCTALabel, secondaryCT
               {secondaryCTA}
             </Button>
           </motion.div>
+
+          {/* Horizontal rule with domain */}
+          <motion.div variants={fadeUp} className="relative mt-14 flex items-center justify-center">
+            <div
+              className="absolute inset-x-0 top-1/2 h-px"
+              style={{ background: 'rgba(0,200,255,0.4)' }}
+            />
+            <span
+              className="relative px-4 text-[10px] tracking-[0.3em] uppercase font-medium"
+              style={{
+                background: 'var(--color-bg)',
+                color: 'rgba(0,200,255,0.6)',
+              }}
+            >
+              PRISMAFLOW.NET
+            </span>
+          </motion.div>
         </motion.div>
       </div>
 
@@ -97,6 +129,15 @@ export default function HeroSection({ data, locale, primaryCTALabel, secondaryCT
           <line x1="100" y1="0" x2="130" y2="300" stroke="#00C8FF" strokeWidth="0.3" />
         </svg>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <ChevronDown size={20} style={{ color: 'rgba(0,200,255,0.5)' }} />
+      </motion.div>
     </section>
   )
 }

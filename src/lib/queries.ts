@@ -34,18 +34,18 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
 
 export const allPostsQuery = `*[_type == "post"] | order(publishedAt desc){
   title, "slug": slug.current, excerpt,
-  mainImage{ asset, alt },
+  mainImage{ "asset": { "url": asset->url }, alt },
   publishedAt, author, categories
 }`
 
 export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0]{
   title, "slug": slug.current, excerpt,
-  mainImage{ asset, alt },
+  mainImage{ "asset": { "url": asset->url }, alt },
   publishedAt, author, body, categories, seo
 }`
 
 export const recentPostsQuery = `*[_type == "post"] | order(publishedAt desc)[0..2]{
   title, "slug": slug.current, excerpt,
-  mainImage{ asset, alt },
+  mainImage{ "asset": { "url": asset->url }, alt },
   publishedAt, author, categories
 }`
