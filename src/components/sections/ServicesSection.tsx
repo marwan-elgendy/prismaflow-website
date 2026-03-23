@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import SectionLabel from '@/components/ui/SectionLabel'
 
@@ -70,6 +71,19 @@ const fallbackServices: Service[] = [
 
 const cardNumbers = ['01', '02', '03']
 
+const blogLinks = {
+  en: [
+    'Read our neuromarketing sales funnel guide',
+    'Explore our neuromarketing copywriting tips',
+    'Discover psychology-based video marketing insights',
+  ],
+  ar: [
+    'اقرأ دليلنا عن هندسة قمع المبيعات بالتسويق العصبي',
+    'اكتشف نصائح الكتابة العصبية الإقناعية',
+    'اكتشف رؤى التسويق بالفيديو النفسي',
+  ],
+}
+
 export default function ServicesSection({ data, locale }: { data?: ServicesData | null; locale: string }) {
   const [expanded, setExpanded] = useState<number | null>(null)
 
@@ -80,6 +94,7 @@ export default function ServicesSection({ data, locale }: { data?: ServicesData 
       : "We Don't Sell Marketing Services. We Create Transformations.")
 
   const services = data?.services?.length ? data.services : fallbackServices
+  const links = locale === 'ar' ? blogLinks.ar : blogLinks.en
 
   return (
     <section className="relative z-10 py-32 bg-[color:var(--color-bg)]">
@@ -170,6 +185,16 @@ export default function ServicesSection({ data, locale }: { data?: ServicesData 
                     {isOpen
                       ? (locale === 'ar' ? '▲ أقل' : '▲ Less')
                       : (locale === 'ar' ? '▼ اعرف أكثر' : '▼ Learn More')}
+                  </div>
+
+                  {/* Internal blog link — stops propagation so card click doesn't toggle */}
+                  <div className="mt-3" onClick={(e) => e.stopPropagation()}>
+                    <Link
+                      href={`/${locale}/blog`}
+                      className="text-[10px] text-[color:var(--color-gray-400)] hover:text-[color:var(--color-cyan)] transition-colors underline underline-offset-2"
+                    >
+                      {links[i] || links[0]}
+                    </Link>
                   </div>
                 </div>
               </motion.div>

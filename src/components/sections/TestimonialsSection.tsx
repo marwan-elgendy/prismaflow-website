@@ -76,9 +76,9 @@ export default function TestimonialsSection({
                 transition={{ delay: i * 0.15, duration: 0.5 }}
                 className="min-w-[300px] md:min-w-0 bg-[color:var(--color-bg)] border border-[color:var(--color-border)] rounded-lg p-8"
               >
-                <p className="text-[color:var(--color-gray-400)] text-sm leading-relaxed mb-6 italic">
+                <blockquote className="text-[color:var(--color-gray-400)] text-sm leading-relaxed mb-6 italic">
                   &ldquo;{quote}&rdquo;
-                </p>
+                </blockquote>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[color:var(--color-cyan-glow)] border border-[rgba(0,200,255,0.3)] flex items-center justify-center text-[color:var(--color-cyan)] font-bold">
                     {t.name[0]}
