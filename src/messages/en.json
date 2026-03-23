@@ -1,0 +1,31 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "How We Work",
+    "blog": "Blog",
+    "apply": "Work With Us"
+  },
+  "hero": {
+    "badge": "Neuromarketing Agency",
+    "cta_primary": "Start Engineering Your Campaign",
+    "cta_secondary": "Download the Desire Map (Free)"
+  },
+  "common": {
+    "readMore": "Read More",
+    "backToBlog": "← Back to Blog",
+    "loading": "Loading...",
+    "apply_now": "Apply Now"
+  },
+  "footer": {
+    "tagline": "Shaping The Desire",
+    "rights": "© 2025 PrismaFlow. All rights reserved.",
+    "newsletter_heading": "Stay ahead of the psychology curve",
+    "newsletter_placeholder": "Your email address",
+    "newsletter_cta": "Subscribe"
+  },
+  "seo": {
+    "default_title": "PrismaFlow — Neuromarketing Agency",
+    "default_description": "We use neuroscience and psychology to engineer desire, turning your brand into an irresistible necessity. Double your sales with PrismaFlow."
+  }
+}
