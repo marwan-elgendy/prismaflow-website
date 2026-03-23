@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import SectionLabel from '@/components/ui/SectionLabel'
 
 interface Service {
@@ -68,6 +68,8 @@ const fallbackServices: Service[] = [
   },
 ]
 
+const cardNumbers = ['01', '02', '03']
+
 export default function ServicesSection({ data, locale }: { data?: ServicesData | null; locale: string }) {
   const [expanded, setExpanded] = useState<number | null>(null)
 
@@ -104,6 +106,7 @@ export default function ServicesSection({ data, locale }: { data?: ServicesData 
             const solution = (locale === 'ar' ? svc.solution.ar : svc.solution.en) || ''
             const result = (locale === 'ar' ? svc.result.ar : svc.result.en) || ''
             const isOpen = expanded === i
+            const cardNum = cardNumbers[i] || `0${i + 1}`
 
             return (
               <motion.div
@@ -112,37 +115,62 @@ export default function ServicesSection({ data, locale }: { data?: ServicesData 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15, duration: 0.5 }}
-                className={`bg-[color:var(--color-surface)] border rounded-lg p-8 cursor-pointer transition-all duration-300 ${
+                whileHover={!isOpen ? { y: -8 } : {}}
+                className={`relative bg-[color:var(--color-surface)] border rounded-lg p-8 cursor-pointer transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? 'border-[color:var(--color-cyan)] shadow-[0_0_30px_rgba(0,200,255,0.1)]'
-                    : 'border-[color:var(--color-border)] hover:border-[rgba(0,200,255,0.4)] hover:-translate-y-1'
+                    ? 'border-[color:var(--color-cyan)] shadow-[0_0_30px_rgba(0,200,255,0.1)] border-l-4'
+                    : 'border-[color:var(--color-border)] hover:border-l-4 hover:border-l-[color:var(--color-cyan)] hover:shadow-[0_0_20px_rgba(0,200,255,0.08)]'
                 }`}
+                style={
+                  isOpen
+                    ? { borderLeftColor: 'var(--color-cyan)', borderLeftWidth: 4 }
+                    : {}
+                }
                 onClick={() => setExpanded(isOpen ? null : i)}
               >
-                <div className="text-4xl mb-4">{svc.icon || '⚡'}</div>
-                <h3 className="text-xl font-bold text-[color:var(--color-white)] mb-3">{title}</h3>
-                <p className="text-[color:var(--color-gray-400)] text-sm italic mb-4">{problem}</p>
+                {/* Background number decoration */}
+                <div
+                  className="absolute top-4 right-4 font-black leading-none select-none pointer-events-none"
+                  style={{
+                    fontSize: '7rem',
+                    color: 'rgba(0,200,255,0.04)',
+                    lineHeight: 1,
+                  }}
+                >
+                  {cardNum}
+                </div>
 
-                {isOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <p className="text-[color:var(--color-white)] text-sm mb-4 leading-relaxed">{solution}</p>
-                    <div className="border-t border-[color:var(--color-border)] pt-4">
-                      <span className="text-xs font-semibold text-[color:var(--color-cyan)] uppercase tracking-wider">
-                        {locale === 'ar' ? 'النتيجة' : 'Result'}
-                      </span>
-                      <p className="text-[color:var(--color-white)] text-sm mt-1">{result}</p>
-                    </div>
-                  </motion.div>
-                )}
+                <div className="relative z-10">
+                  <div className="text-4xl mb-4">{svc.icon || '⚡'}</div>
+                  <h3 className="text-xl font-bold text-[color:var(--color-white)] mb-3">{title}</h3>
+                  <p className="text-[color:var(--color-gray-400)] text-sm italic mb-4">{problem}</p>
 
-                <div className="mt-4 text-xs text-[color:var(--color-cyan)]">
-                  {isOpen
-                    ? (locale === 'ar' ? '▲ أقل' : '▲ Less')
-                    : (locale === 'ar' ? '▼ المزيد' : '▼ More')}
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        key="expand"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <p className="text-[color:var(--color-white)] text-sm mb-4 leading-relaxed">{solution}</p>
+                        <div className="border-t border-[color:var(--color-border)] pt-4">
+                          <span className="text-xs font-semibold text-[color:var(--color-cyan)] uppercase tracking-wider">
+                            {locale === 'ar' ? 'النتيجة' : 'Result'}
+                          </span>
+                          <p className="text-[color:var(--color-white)] text-sm mt-1">{result}</p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className="mt-4 text-xs font-semibold text-[color:var(--color-cyan)] uppercase tracking-widest">
+                    {isOpen
+                      ? (locale === 'ar' ? '▲ أقل' : '▲ Less')
+                      : (locale === 'ar' ? '▼ اعرف أكثر' : '▼ Learn More')}
+                  </div>
                 </div>
               </motion.div>
             )

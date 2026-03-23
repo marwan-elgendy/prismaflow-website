@@ -1,28 +1,143 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About",
-    "services": "How We Work",
-    "blog": "Blog",
+    "about": "Our Story",
+    "services": "The Arsenal",
+    "blog": "Mind Lab",
     "apply": "Work With Us"
   },
   "hero": {
     "badge": "Neuromarketing Agency",
+    "headline": "Double Your Sales and Dominate Consumer Decisions via",
+    "headline_highlight": "Neuromarketing",
+    "subheadline": "We don't design ads for likes. We use psychology to Engineer Desire — turning your brand from just another option into an irresistible necessity your customers can't explain why they need.",
     "cta_primary": "Start Engineering Your Campaign",
-    "cta_secondary": "Download the Desire Map (Free)"
+    "cta_secondary": "Download the Desire Map (Free)",
+    "scroll_hint": "Scroll to explore"
+  },
+  "problem": {
+    "label": "THE DIAGNOSIS",
+    "headline": "Are You Burning Your Budget on Ads Everyone Ignores?",
+    "body": "The problem isn't your product. It's generic \"vanilla\" marketing built on guesswork, not psychology. Every day without Neuromarketing is a day you hand your customers to your competitors — gift-wrapped.",
+    "pain_1_problem": "High ad spend, near-zero ROI",
+    "pain_1_solution": "Psychology-driven campaigns that convert",
+    "pain_2_problem": "Copy nobody stops to read",
+    "pain_2_solution": "Neuro-copy that stops the scroll",
+    "pain_3_problem": "Brand invisible in the noise",
+    "pain_3_solution": "An identity impossible to forget"
+  },
+  "process": {
+    "label": "THE ROADMAP",
+    "headline": "PrismaFlow Holds the Map to the Buyer's Mind",
+    "step_1_number": "01",
+    "step_1_title": "Decode the Subconscious",
+    "step_1_desc": "We dive beneath surface demographics to uncover the deep biological desires your audience doesn't even know they have.",
+    "step_2_number": "02",
+    "step_2_title": "Design the Psychological Path",
+    "step_2_desc": "We architect a frictionless purchase journey — each touchpoint engineered to dissolve resistance and build inevitable desire.",
+    "step_3_number": "03",
+    "step_3_title": "Activate the Orange Ticket",
+    "step_3_desc": "We make your brand unforgettable. Not just recognized — craved. Your customers won't remember choosing you; they'll just remember that they had to."
+  },
+  "services": {
+    "label": "THE ARSENAL",
+    "headline": "We Don't Sell Marketing Services.",
+    "headline_2": "We Create Transformations.",
+    "subheadline": "Our tools are built on neuroscience — weapons designed to breach your audience's unconscious defenses and turn passive observers into paying customers.",
+    "s1_icon": "🧲",
+    "s1_title": "Sales Funnel Engineering",
+    "s1_problem": "Thousands visit your site. Most leave without buying.",
+    "s1_solution": "We build psychological \"slippery slides\" — every element of your funnel designed to pull visitors forward until the only logical next step is buying.",
+    "s1_result": "A 24/7 revenue machine, not a digital brochure.",
+    "s2_icon": "🧠",
+    "s2_title": "Neuro-Copywriting",
+    "s2_problem": "Your ads read like a press release. Nobody cares.",
+    "s2_solution": "We use pathological empathy to write copy that reaches inside your customer's chest and squeezes. The first sentence makes them think we're reading their mind.",
+    "s2_result": "Copy that doesn't inform — it compels.",
+    "s3_icon": "🎬",
+    "s3_title": "Mental Movies Production",
+    "s3_problem": "Traditional video ads are wallpaper. Ignored before they start.",
+    "s3_solution": "We fuse cinematic production with sales psychology to create videos where your customer mentally \"lives\" owning your product before they buy it.",
+    "s3_result": "Attention stolen and desire planted in under 5 seconds.",
+    "learn_more": "See how it works →",
+    "cta_link": "/apply"
+  },
+  "testimonials": {
+    "label": "PROOF OF DOMINANCE",
+    "headline": "Clients Who Dominated Their Markets With Us"
+  },
+  "cta_banner": {
+    "label": "READY?",
+    "headline": "Stop Leaving Money on the Table.",
+    "subheadline": "Your competitors are making decisions based on gut feeling. You could be making them based on neuroscience.",
+    "button": "Engineer Your Campaign Now"
+  },
+  "about": {
+    "hero_headline": "We're Here to Rescue You From the Vanilla Ad Trap.",
+    "hero_sub": "At PrismaFlow, your brand isn't the hero of the story. Your customer is. We are the Guide — the one who knows the biological secrets of human desire — and we hand you the weapon to win.",
+    "story_label": "WHY PRISMA",
+    "story_headline": "Because We Believe in Engineering Desire.",
+    "story_body": "A glass prism takes ordinary white light and refracts it into a spectrum no one can look away from. We do the same to your marketing. We take standard campaigns and run them through the lens of neuromarketing, creating desire so precise and potent your competitors will wonder what changed.",
+    "quote": "Being different is better than being better.",
+    "quote_sub": "— The PrismaFlow Manifesto",
+    "cta": "Ready to Be Different?",
+    "cta_button": "Start the Conversation"
+  },
+  "apply": {
+    "label": "LET'S TALK",
+    "headline": "Let's Engineer Your Customers' Desire Together.",
+    "exclusion_headline": "We Don't Work With Everyone.",
+    "exclusion_body": "If you want an agency to design pretty pictures and chase vanity metrics — we are not your people. But if you are serious about using the science of persuasion to multiply your revenue, and you're ready to commit to that process — fill out the form below. We review every application personally.",
+    "form_name": "Your Full Name",
+    "form_phone": "Phone Number",
+    "form_email": "Email Address",
+    "form_social": "Website or Social Media Link (optional)",
+    "form_challenge": "What is your biggest marketing challenge right now?",
+    "form_goal": "What is your revenue/sales goal for next quarter?",
+    "form_submit": "Submit Your Application",
+    "form_submitting": "Sending...",
+    "form_success": "Application received. We'll be in touch within 48 hours.",
+    "form_error": "Something went wrong. Please try again."
+  },
+  "landing": {
+    "headline": "The Secret Blueprint: How to Force Your Customers' Subconscious to Buy",
+    "subheadline": "Download the Desire Engineering Map — 5 psychological triggers humans cannot biologically resist.",
+    "bullet_1": "Discover why people buy with emotion and justify with logic — and how to exploit that gap.",
+    "bullet_2": "Stop burning money on \"likes\" and start harvesting actual sales.",
+    "bullet_3": "Actionable steps you can deploy in your very next campaign.",
+    "form_name": "Your Name",
+    "form_email": "Email Address",
+    "form_submit": "Send Me the Map Now",
+    "triggers_label": "INSIDE THE MAP",
+    "triggers_headline": "5 Psychological Triggers You'll Unlock"
+  },
+  "blog": {
+    "label": "MIND LAB",
+    "headline": "Inside the Psychology of Buying",
+    "subheadline": "Neuromarketing research, case studies, and tactics — distilled for marketers who want to win.",
+    "no_posts": "New articles coming soon. Subscribe to be notified.",
+    "read_time": "min read",
+    "back": "← Back to Mind Lab"
   },
   "common": {
-    "readMore": "Read More",
-    "backToBlog": "← Back to Blog",
+    "readMore": "Read Article →",
     "loading": "Loading...",
-    "apply_now": "Apply Now"
+    "apply_now": "Apply Now",
+    "tagline": "SHAPING THE DESIRE"
   },
   "footer": {
     "tagline": "Shaping The Desire",
     "rights": "© 2025 PrismaFlow. All rights reserved.",
-    "newsletter_heading": "Stay ahead of the psychology curve",
+    "newsletter_heading": "Stay Ahead of the Psychology Curve",
+    "newsletter_sub": "Monthly insights on neuromarketing, persuasion, and consumer psychology.",
     "newsletter_placeholder": "Your email address",
-    "newsletter_cta": "Subscribe"
+    "newsletter_cta": "Subscribe",
+    "col_company": "Company",
+    "col_services": "Services",
+    "col_connect": "Connect",
+    "link_funnel": "Funnel Engineering",
+    "link_copy": "Neuro-Copywriting",
+    "link_video": "Mental Movies"
   },
   "seo": {
     "default_title": "PrismaFlow — Neuromarketing Agency",

@@ -3,7 +3,7 @@ import { client } from '@/lib/sanity'
 import { landingPageQuery } from '@/lib/queries'
 import LeadCaptureForm from '@/components/forms/LeadCaptureForm'
 import GlowText from '@/components/effects/GlowText'
-import NeuralBackground from '@/components/effects/NeuralBackground'
+import NeuralBackgroundClient from '@/components/effects/NeuralBackgroundClient'
 
 export const metadata: Metadata = {
   title: 'Desire Engineering Map — Free Download',
@@ -46,7 +46,7 @@ export default async function LandingPage({
 
   return (
     <div className="relative min-h-screen flex flex-col bg-[color:var(--color-bg)]">
-      <NeuralBackground />
+      <NeuralBackgroundClient />
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-24 text-center max-w-3xl mx-auto w-full">
         {/* Logo */}

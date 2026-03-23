@@ -2,8 +2,6 @@
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
 
-// TODO: Wire to backend (e.g., email service, CRM, or API route) before going live
-
 interface FormData {
   fullName: string
   phone: string
@@ -19,6 +17,8 @@ export default function ApplicationForm({ locale }: { locale: string }) {
     fullName: '', phone: '', email: '', website: '', challenge: '', goal: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const labels = {
     fullName: isAr ? 'الاسم الكامل' : 'Full Name',
@@ -28,16 +28,29 @@ export default function ApplicationForm({ locale }: { locale: string }) {
     challenge: isAr ? 'ما هو أكبر تحدٍّ تسويقي تواجهه الآن؟' : 'What is your biggest marketing challenge right now?',
     goal: isAr ? 'ما هو هدفك المالي/المبيعاتي للربع القادم؟' : 'What is your financial/sales goal for next quarter?',
     submit: isAr ? 'أرسل طلبك' : 'Submit Application',
+    submitting: isAr ? 'جارٍ الإرسال...' : 'Submitting...',
     success: isAr ? 'تم إرسال طلبك! سنتواصل معك قريباً.' : "Application submitted! We'll be in touch soon.",
+    errorGeneric: isAr ? 'حدث خطأ. يرجى المحاولة مجدداً.' : 'Something went wrong. Please try again.',
   }
 
-  const inputClass =
-    'w-full bg-[color:var(--color-bg)] border border-[color:var(--color-border)] text-[color:var(--color-white)] placeholder-[color:var(--color-gray-400)] px-4 py-3 rounded-sm focus:outline-none focus:border-[color:var(--color-cyan)] transition-colors text-sm'
+  const inputClass = 'form-input'
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Application form data:', form)
-    setSubmitted(true)
+    setLoading(true)
+    setError(null)
+    try {
+      await fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      setSubmitted(true)
+    } catch {
+      setError(labels.errorGeneric)
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (submitted) {
@@ -117,8 +130,19 @@ export default function ApplicationForm({ locale }: { locale: string }) {
         />
       </div>
 
-      <Button type="submit" variant="primary" size="lg" className="w-full justify-center">
-        {labels.submit}
+      {error && (
+        <p role="alert" className="text-red-400 text-sm text-center">
+          {error}
+        </p>
+      )}
+
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        className={`w-full justify-center ${loading ? 'opacity-70 pointer-events-none' : ''}`}
+      >
+        {loading ? labels.submitting : labels.submit}
       </Button>
     </form>
   )

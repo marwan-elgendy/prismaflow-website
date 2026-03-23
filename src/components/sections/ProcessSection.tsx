@@ -1,5 +1,6 @@
 'use client'
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import SectionLabel from '@/components/ui/SectionLabel'
 
 interface Step {
@@ -40,6 +41,45 @@ const fallbackSteps = [
   },
 ]
 
+function AnimatedConnector() {
+  const ref = useRef<SVGSVGElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-100px' })
+
+  return (
+    <svg
+      ref={ref}
+      className="hidden md:block absolute top-12 left-0 right-0 w-full pointer-events-none"
+      height="2"
+      style={{ overflow: 'visible' }}
+    >
+      <defs>
+        <linearGradient id="connector-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="transparent" />
+          <stop offset="30%" stopColor="#00C8FF" stopOpacity="0.5" />
+          <stop offset="70%" stopColor="#00C8FF" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="transparent" />
+        </linearGradient>
+      </defs>
+      <motion.line
+        x1="20%"
+        y1="1"
+        x2="80%"
+        y2="1"
+        stroke="url(#connector-grad)"
+        strokeWidth="1"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+        transition={{ duration: 1.2, ease: 'easeInOut', delay: 0.4 }}
+        style={{
+          strokeDasharray: 1,
+          strokeDashoffset: 1,
+        }}
+      />
+    </svg>
+  )
+}
+
 export default function ProcessSection({ data, locale }: { data?: ProcessData | null; locale: string }) {
   const headline =
     (locale === 'ar' ? data?.headline?.ar : data?.headline?.en) ||
@@ -68,8 +108,8 @@ export default function ProcessSection({ data, locale }: { data?: ProcessData | 
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 relative">
-          {/* Connecting line */}
-          <div className="hidden md:block absolute top-12 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-[color:var(--color-cyan)] to-transparent opacity-30" />
+          {/* Animated SVG connector line */}
+          <AnimatedConnector />
 
           {steps.map((step, i) => {
             const title = (locale === 'ar' ? step.title.ar : step.title.en) || ''

@@ -27,13 +27,22 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
 
   return (
     <Link href={`/${locale}/blog/${post.slug}`} className="group block">
-      <article className="bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg overflow-hidden hover:border-[color:var(--color-cyan)] hover:-translate-y-1 transition-all duration-300">
+      <article className="relative bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg overflow-hidden hover:-translate-y-1 transition-all duration-300">
+        {/* Cyan top border — reveals on hover */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[3px] z-10 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #00C8FF, transparent)',
+          }}
+        />
+
         {imageUrl && (
           <div className="relative h-48 overflow-hidden">
             <Image
               src={imageUrl}
               alt={imageAlt}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
           </div>
@@ -50,7 +59,13 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
               {post.categories.slice(0, 2).map((cat) => (
                 <span
                   key={cat}
-                  className="text-xs px-2 py-1 rounded bg-[rgba(0,200,255,0.1)] text-[color:var(--color-cyan)]"
+                  className="text-[10px] px-2 py-0.5 rounded-sm font-semibold uppercase tracking-widest"
+                  style={{
+                    background: 'rgba(0,200,255,0.10)',
+                    color: '#00C8FF',
+                    border: '1px solid rgba(0,200,255,0.2)',
+                    letterSpacing: '0.15em',
+                  }}
                 >
                   {cat}
                 </span>

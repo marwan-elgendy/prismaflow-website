@@ -44,6 +44,27 @@ body {
   text-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
 }
 
+/* Form inputs */
+.form-input {
+  display: block;
+  width: 100%;
+  background: #14141A;
+  border: 1px solid var(--color-border);
+  color: var(--color-white);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input::placeholder {
+  color: var(--color-gray-600);
+}
+.form-input:focus {
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.12);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
