@@ -1,9 +1,7 @@
 'use client'
 import { motion } from 'framer-motion'
 import Button from '@/components/ui/Button'
-import Badge from '@/components/ui/Badge'
-import GlowText from '@/components/effects/GlowText'
-import { ChevronDown } from 'lucide-react'
+import TextReveal from '@/components/ui/TextReveal'
 
 interface HeroData {
   headline?: { en?: string; ar?: string }
@@ -21,78 +19,70 @@ interface HeroSectionProps {
 
 const fallback = {
   en: {
-    headline: 'Double Your Sales and Dominate Consumer Decisions via',
-    highlight: 'Neuromarketing',
+    headline: 'Engineer Desire. Double Sales.',
     subheadline:
-      "We don't design ads for likes. We use psychology to Engineer Desire, turning your brand from an option into an irresistible necessity.",
+      "We don't design ads for likes. We use neuroscience and psychology to turn your brand from an option into an irresistible necessity.",
   },
   ar: {
-    headline: 'ضاعف مبيعاتك وسيطر على قرارات المستهلكين عبر',
-    highlight: 'التسويق العصبي',
+    headline: 'هندسة الرغبة. مضاعفة المبيعات.',
     subheadline:
-      'لا نصمم إعلانات للإعجابات. نستخدم علم النفس لهندسة الرغبة، ونحوّل علامتك التجارية من خيار إلى ضرورة لا تُقاوم.',
+      'لا نصمم إعلانات للإعجابات. نستخدم علم الأعصاب وعلم النفس لتحويل علامتك التجارية من خيار إلى ضرورة لا تُقاوم.',
   },
-}
-
-const stagger = {
-  animate: { transition: { staggerChildren: 0.15 } },
-}
-const fadeUp = {
-  initial: { opacity: 0, y: 30 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 }
 
 export default function HeroSection({ data, locale, primaryCTALabel, secondaryCTALabel }: HeroSectionProps) {
   const f = fallback[locale as 'en' | 'ar'] || fallback.en
-  const headline =
-    (locale === 'ar' ? data?.headline?.ar : data?.headline?.en) || f.headline
-  const subheadline =
-    (locale === 'ar' ? data?.subheadline?.ar : data?.subheadline?.en) || f.subheadline
-  const primaryCTA =
-    (locale === 'ar' ? data?.primaryCTA?.ar : data?.primaryCTA?.en) || primaryCTALabel
-  const secondaryCTA =
-    (locale === 'ar' ? data?.secondaryCTA?.ar : data?.secondaryCTA?.en) || secondaryCTALabel
+  const headline = (locale === 'ar' ? data?.headline?.ar : data?.headline?.en) || f.headline
+  const subheadline = (locale === 'ar' ? data?.subheadline?.ar : data?.subheadline?.en) || f.subheadline
+  const primaryCTA = (locale === 'ar' ? data?.primaryCTA?.ar : data?.primaryCTA?.en) || primaryCTALabel
+  const secondaryCTA = (locale === 'ar' ? data?.secondaryCTA?.ar : data?.secondaryCTA?.en) || secondaryCTALabel
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated gradient orb */}
-      <motion.div
-        className="absolute left-1/4 top-1/2 -translate-y-1/2 pointer-events-none"
-        animate={{ scale: [1, 1.15, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-        style={{
-          width: 600,
-          height: 600,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[var(--bg)]">
+      <div className="max-w-6xl mx-auto px-6 pt-24 pb-32 w-full">
+        {/* Eyebrow */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-xs tracking-[0.3em] uppercase text-[var(--text-dim)] mb-8 font-medium"
+        >
+          {locale === 'ar' ? 'وكالة التسويق العصبي' : 'Neuromarketing Agency'}
+        </motion.p>
 
-      <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-        <motion.div variants={stagger} initial="initial" animate="animate">
-          <motion.div variants={fadeUp} className="mb-6">
-            <Badge variant="cyan">
-              {locale === 'ar' ? 'وكالة التسويق العصبي' : 'Neuromarketing Agency'}
-            </Badge>
-          </motion.div>
+        {/* Giant headline */}
+        <h1 className="text-7xl md:text-8xl lg:text-9xl font-black leading-[0.95] tracking-tight text-[var(--text)] mb-10 max-w-4xl">
+          <TextReveal delay={0.2} stagger={0.08}>
+            {headline}
+          </TextReveal>
+        </h1>
 
-          <motion.h1
-            variants={fadeUp}
-            className="text-6xl md:text-8xl font-bold leading-tight mb-6 text-[color:var(--color-white)]"
-          >
-            {headline}{' '}
-            <GlowText intensity="high">{f.highlight}</GlowText>
-          </motion.h1>
+        {/* Divider line */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.8, delay: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+          style={{ transformOrigin: locale === 'ar' ? 'right' : 'left' }}
+          className="h-px bg-[var(--border)] max-w-xl mb-10"
+        />
 
+        {/* Subheadline + CTAs in a row on large screens */}
+        <div className="flex flex-col lg:flex-row lg:items-end gap-10 lg:gap-16">
           <motion.p
-            variants={fadeUp}
-            className="text-lg md:text-xl text-[color:var(--color-gray-400)] max-w-3xl mx-auto mb-10 leading-relaxed"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="text-lg md:text-xl text-[var(--text-muted)] max-w-lg leading-relaxed"
           >
             {subheadline}
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="flex flex-col sm:flex-row gap-3 shrink-0"
+          >
             <Button variant="primary" size="lg" href={`/${locale}/apply`}>
               {primaryCTA}
             </Button>
@@ -100,44 +90,22 @@ export default function HeroSection({ data, locale, primaryCTALabel, secondaryCT
               {secondaryCTA}
             </Button>
           </motion.div>
-
-          {/* Horizontal rule with domain */}
-          <motion.div variants={fadeUp} className="relative mt-14 flex items-center justify-center">
-            <div
-              className="absolute inset-x-0 top-1/2 h-px"
-              style={{ background: 'rgba(0,200,255,0.4)' }}
-            />
-            <span
-              className="relative px-4 text-[10px] tracking-[0.3em] uppercase font-medium"
-              style={{
-                background: 'var(--color-bg)',
-                color: 'rgba(0,200,255,0.6)',
-              }}
-            >
-              PRISMAFLOW.NET
-            </span>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Decorative prism SVG */}
-      <div className="absolute right-12 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none hidden lg:block">
-        <svg width="200" height="300" viewBox="0 0 200 300" fill="none">
-          <polygon points="100,0 200,300 0,300" stroke="#00C8FF" strokeWidth="1" fill="none" />
-          <polygon points="100,40 175,270 25,270" stroke="#00C8FF" strokeWidth="0.5" fill="rgba(0,200,255,0.03)" />
-          <line x1="100" y1="0" x2="70" y2="300" stroke="#00C8FF" strokeWidth="0.3" />
-          <line x1="100" y1="0" x2="130" y2="300" stroke="#00C8FF" strokeWidth="0.3" />
-        </svg>
+        </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <ChevronDown size={20} style={{ color: 'rgba(0,200,255,0.5)' }} />
-      </motion.div>
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex flex-col items-center gap-1.5"
+        >
+          <span className="text-[9px] tracking-[0.25em] uppercase text-[var(--text-dim)] font-medium">
+            {locale === 'ar' ? 'تمرير' : 'scroll'}
+          </span>
+          <div className="w-px h-10 bg-gradient-to-b from-[var(--border)] to-transparent" />
+        </motion.div>
+      </div>
     </section>
   )
 }

@@ -13,7 +13,7 @@ interface Post {
 export default function BlogGrid({ posts, locale }: { posts: Post[]; locale: string }) {
   if (!posts.length) {
     return (
-      <p className="text-center text-[color:var(--color-gray-400)] py-20">
+      <p className="text-center text-[var(--text-muted)] py-20">
         {locale === 'ar' ? 'لا توجد مقالات بعد.' : 'No posts yet.'}
       </p>
     )

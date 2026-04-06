@@ -19,13 +19,13 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={toggle}
-      className="flex items-center gap-1 text-sm font-medium text-[color:var(--color-gray-400)] hover:text-[color:var(--color-cyan)] transition-colors"
+      className="flex items-center gap-1 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
       aria-label={ariaLabel}
       lang={nextLocale}
     >
-      <span className={locale === 'en' ? 'text-[color:var(--color-cyan)]' : ''} aria-current={locale === 'en' ? 'true' : undefined}>EN</span>
-      <span className="text-[color:var(--color-gray-600)]" aria-hidden="true">|</span>
-      <span className={locale === 'ar' ? 'text-[color:var(--color-cyan)]' : ''} aria-current={locale === 'ar' ? 'true' : undefined}>AR</span>
+      <span className={locale === 'en' ? 'text-[var(--prism)]' : ''} aria-current={locale === 'en' ? 'true' : undefined}>EN</span>
+      <span className="text-[var(--text-dim)]" aria-hidden="true">|</span>
+      <span className={locale === 'ar' ? 'text-[var(--prism)]' : ''} aria-current={locale === 'ar' ? 'true' : undefined}>AR</span>
     </button>
   )
 }

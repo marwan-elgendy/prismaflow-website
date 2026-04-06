@@ -9,8 +9,7 @@ export default function LeadCaptureForm({ locale, ctaLabel }: { locale: string; 
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const inputClass =
-    'w-full bg-[rgba(255,255,255,0.05)] border border-[color:var(--color-border)] text-[color:var(--color-white)] placeholder-[color:var(--color-gray-400)] px-4 py-3 rounded-sm focus:outline-none focus:border-[color:var(--color-cyan)] transition-colors text-sm'
+  const inputClass = 'form-input'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,7 +29,7 @@ export default function LeadCaptureForm({ locale, ctaLabel }: { locale: string; 
   if (submitted) {
     return (
       <div className="text-center py-8">
-        <p className="text-[color:var(--color-cyan)] text-xl font-semibold">
+        <p className="text-[var(--prism)] text-xl font-semibold">
           {isAr ? '🎉 شكراً! سيصلك الدليل قريباً.' : '🎉 Thanks! The guide is on its way.'}
         </p>
       </div>

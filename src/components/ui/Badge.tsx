@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 
-type BadgeVariant = 'cyan' | 'gray'
+type BadgeVariant = 'prism' | 'muted'
 
 interface BadgeProps {
   children: ReactNode
@@ -9,11 +9,11 @@ interface BadgeProps {
 }
 
 const variants: Record<BadgeVariant, string> = {
-  cyan: 'bg-[rgba(0,200,255,0.12)] text-[color:var(--color-cyan)] border border-[rgba(0,200,255,0.25)]',
-  gray: 'bg-[color:var(--color-surface)] text-[color:var(--color-gray-400)] border border-[color:var(--color-border)]',
+  prism: 'bg-[var(--prism-glow)] text-[var(--prism)] border border-[var(--prism)]/25',
+  muted: 'bg-[var(--surface-alt)] text-[var(--text-muted)] border border-[var(--border)]',
 }
 
-export default function Badge({ children, variant = 'cyan', className = '' }: BadgeProps) {
+export default function Badge({ children, variant = 'prism', className = '' }: BadgeProps) {
   return (
     <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${variants[variant]} ${className}`}>
       {children}

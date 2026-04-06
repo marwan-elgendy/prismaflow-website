@@ -1,6 +1,7 @@
 'use client'
 import { motion } from 'framer-motion'
 import SectionLabel from '@/components/ui/SectionLabel'
+import TextReveal from '@/components/ui/TextReveal'
 
 interface Testimonial {
   name: string
@@ -13,8 +14,8 @@ const fallback: Testimonial[] = [
     name: 'Ahmed Al-Rashidi',
     company: 'TechStart MENA',
     quote: {
-      en: 'PrismaFlow transformed our marketing from generic noise into laser-focused desire engineering. Sales doubled in 3 months.',
-      ar: 'حوّل PrismaFlow تسويقنا من ضجيج عام إلى هندسة رغبة دقيقة. تضاعفت المبيعات في 3 أشهر.',
+      en: 'PrismaFlow transformed our marketing from generic noise into laser-focused desire engineering. Sales doubled in three months.',
+      ar: 'حوّل PrismaFlow تسويقنا من ضجيج عام إلى هندسة رغبة دقيقة. تضاعفت المبيعات في ثلاثة أشهر.',
     },
   },
   {
@@ -29,7 +30,7 @@ const fallback: Testimonial[] = [
     name: 'Khalid Nouri',
     company: 'Atlas Consulting',
     quote: {
-      en: 'The copy they wrote made our clients say "that\'s exactly me!" — conversion rates went through the roof.',
+      en: "The copy they wrote made our clients say 'that's exactly me!' — conversion rates went through the roof.",
       ar: 'النصوص التي كتبوها جعلت عملاءنا يقولون "هذا أنا بالضبط!" — ارتفعت معدلات التحويل بشكل ملحوظ.',
     },
   },
@@ -42,51 +43,57 @@ export default function TestimonialsSection({
   data?: Testimonial[] | null
   locale: string
 }) {
+  const isAr = locale === 'ar'
   const testimonials = data?.length ? data : fallback
+  const sectionHeadline = isAr
+    ? 'عملاء سيطروا على أسواقهم معنا'
+    : 'Clients Who Dominated Their Markets With Us'
 
   return (
-    <section className="relative z-10 py-32 bg-[color:var(--color-surface)]" style={{ clipPath: 'polygon(0 3%, 100% 0, 100% 97%, 0 100%)' }}>
+    <section className="relative z-10 py-32 bg-[var(--surface)]">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <SectionLabel className="justify-center mb-4">
-            {locale === 'ar' ? 'شهادات العملاء' : 'CLIENT WINS'}
+        {/* Header */}
+        <div className="mb-16">
+          <SectionLabel className="mb-6">
+            {isAr ? 'شهادات العملاء' : 'CLIENT WINS'}
           </SectionLabel>
-          <h2 className="text-4xl md:text-5xl font-bold text-[color:var(--color-white)] max-w-3xl mx-auto leading-tight">
-            {locale === 'ar'
-              ? 'عملاء سيطروا على أسواقهم معنا'
-              : 'Clients Who Dominated Their Markets With Us'}
+          <h2 className="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight text-[var(--text)] max-w-xl">
+            <TextReveal delay={0.1} stagger={0.07}>
+              {sectionHeadline}
+            </TextReveal>
           </h2>
-        </motion.div>
+        </div>
 
-        <div className="flex gap-6 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible">
+        {/* Testimonial cards */}
+        <div className="grid md:grid-cols-3 gap-px bg-[var(--border)]">
           {testimonials.map((t, i) => {
-            const quote = (locale === 'ar' ? t.quote.ar : t.quote.en) || ''
+            const quote = (isAr ? t.quote.ar : t.quote.en) || ''
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.5 }}
-                className="min-w-[300px] md:min-w-0 bg-[color:var(--color-bg)] border border-[color:var(--color-border)] rounded-lg p-8"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: i * 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="bg-[var(--surface)] p-8 md:p-10 flex flex-col gap-8"
               >
-                <blockquote className="text-[color:var(--color-gray-400)] text-sm leading-relaxed mb-6 italic">
-                  &ldquo;{quote}&rdquo;
+                {/* Large opening quote mark */}
+                <span
+                  className="text-6xl leading-none font-black text-[var(--border)] select-none"
+                  aria-hidden="true"
+                >
+                  &ldquo;
+                </span>
+
+                {/* Quote text */}
+                <blockquote className="text-lg md:text-xl text-[var(--text)] font-medium leading-relaxed flex-1">
+                  {quote}
                 </blockquote>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[color:var(--color-cyan-glow)] border border-[rgba(0,200,255,0.3)] flex items-center justify-center text-[color:var(--color-cyan)] font-bold">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <p className="text-[color:var(--color-white)] text-sm font-semibold">{t.name}</p>
-                    <p className="text-[color:var(--color-gray-400)] text-xs">{t.company}</p>
-                  </div>
+
+                {/* Attribution */}
+                <div className="border-t border-[var(--border)] pt-6">
+                  <p className="text-sm font-bold text-[var(--text)]">{t.name}</p>
+                  <p className="text-xs text-[var(--text-dim)] mt-0.5 tracking-wide">{t.company}</p>
                 </div>
               </motion.div>
             )

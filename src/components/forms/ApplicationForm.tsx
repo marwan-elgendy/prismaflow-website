@@ -55,9 +55,11 @@ export default function ApplicationForm({ locale }: { locale: string }) {
 
   if (submitted) {
     return (
-      <div className="text-center py-16">
-        <div className="text-5xl mb-4">✅</div>
-        <p className="text-[color:var(--color-cyan)] text-xl font-semibold">{labels.success}</p>
+      <div className="py-16 border-t border-[var(--border)]">
+        <p className="text-xs uppercase tracking-widest text-[var(--text-dim)] mb-4">
+          {isAr ? 'تم الإرسال' : 'Submitted'}
+        </p>
+        <p className="text-[var(--text)] text-2xl font-semibold leading-snug">{labels.success}</p>
       </div>
     )
   }
@@ -66,7 +68,7 @@ export default function ApplicationForm({ locale }: { locale: string }) {
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
       <div className="grid sm:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm text-[color:var(--color-gray-400)] mb-2">{labels.fullName} *</label>
+          <label className="block text-sm text-[var(--text-muted)] mb-2">{labels.fullName} *</label>
           <input
             type="text"
             required
@@ -76,7 +78,7 @@ export default function ApplicationForm({ locale }: { locale: string }) {
           />
         </div>
         <div>
-          <label className="block text-sm text-[color:var(--color-gray-400)] mb-2">{labels.phone} *</label>
+          <label className="block text-sm text-[var(--text-muted)] mb-2">{labels.phone} *</label>
           <input
             type="tel"
             required
@@ -88,7 +90,7 @@ export default function ApplicationForm({ locale }: { locale: string }) {
       </div>
 
       <div>
-        <label className="block text-sm text-[color:var(--color-gray-400)] mb-2">{labels.email} *</label>
+        <label className="block text-sm text-[var(--text-muted)] mb-2">{labels.email} *</label>
         <input
           type="email"
           required
@@ -99,7 +101,7 @@ export default function ApplicationForm({ locale }: { locale: string }) {
       </div>
 
       <div>
-        <label className="block text-sm text-[color:var(--color-gray-400)] mb-2">{labels.website}</label>
+        <label className="block text-sm text-[var(--text-muted)] mb-2">{labels.website}</label>
         <input
           type="url"
           value={form.website}
@@ -109,7 +111,7 @@ export default function ApplicationForm({ locale }: { locale: string }) {
       </div>
 
       <div>
-        <label className="block text-sm text-[color:var(--color-gray-400)] mb-2">{labels.challenge} *</label>
+        <label className="block text-sm text-[var(--text-muted)] mb-2">{labels.challenge} *</label>
         <textarea
           required
           rows={4}
@@ -120,7 +122,7 @@ export default function ApplicationForm({ locale }: { locale: string }) {
       </div>
 
       <div>
-        <label className="block text-sm text-[color:var(--color-gray-400)] mb-2">{labels.goal} *</label>
+        <label className="block text-sm text-[var(--text-muted)] mb-2">{labels.goal} *</label>
         <textarea
           required
           rows={4}

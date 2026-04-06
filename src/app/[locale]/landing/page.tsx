@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { client } from '@/lib/sanity'
 import { landingPageQuery } from '@/lib/queries'
 import LeadCaptureForm from '@/components/forms/LeadCaptureForm'
-import GlowText from '@/components/effects/GlowText'
-import NeuralBackgroundClient from '@/components/effects/NeuralBackgroundClient'
 
 export const metadata: Metadata = {
   title: 'Desire Engineering Map — Free Download',
@@ -45,38 +43,37 @@ export default async function LandingPage({
     (isAr ? 'احصل على الخريطة مجاناً' : 'Get the Free Map')
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-[color:var(--color-bg)]">
-      <NeuralBackgroundClient />
+    <div className="relative min-h-screen flex flex-col bg-[var(--bg)]">
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-24 text-center max-w-3xl mx-auto w-full">
         {/* Logo */}
         <div className="mb-10">
           <span className="text-2xl font-bold">
-            <span className="text-[color:var(--color-gray-400)]">PRISMA</span>
-            <span className="text-[color:var(--color-cyan)]">FLOW</span>
+            <span className="text-[var(--text)]">PRISMA</span>
+            <span className="text-[var(--prism)]">FLOW</span>
           </span>
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-black text-[color:var(--color-white)] leading-tight mb-6">
-          <GlowText intensity="high">{headline}</GlowText>
+        <h1 className="text-4xl md:text-6xl font-black text-[var(--text)] leading-tight mb-6">
+          {headline}
         </h1>
-        <p className="text-xl text-[color:var(--color-gray-400)] mb-10">{subheadline}</p>
+        <p className="text-xl text-[var(--text-muted)] mb-10">{subheadline}</p>
 
         <LeadCaptureForm locale={locale} ctaLabel={ctaLabel} />
 
         {/* Triggers teaser */}
         <div className="mt-20 w-full text-left rtl:text-right">
-          <h2 className="text-lg font-semibold text-[color:var(--color-white)] mb-6 text-center">
+          <h2 className="text-lg font-semibold text-[var(--text)] mb-6 text-center">
             {isAr ? 'ماذا ستتعلم:' : "What's Inside:"}
           </h2>
           <ul className="space-y-3">
             {triggers.map((t, i) => (
               <li
                 key={i}
-                className="flex items-start gap-3 bg-[color:var(--color-surface)] border border-[color:var(--color-border)] rounded-lg px-5 py-4"
+                className="flex items-start gap-3 bg-[var(--surface)] border border-[var(--border)] rounded-lg px-5 py-4"
               >
-                <span className="text-[color:var(--color-cyan)] font-bold mt-0.5">0{i + 1}</span>
-                <span className="text-[color:var(--color-gray-400)] text-sm">{isAr ? t.ar : t.en}</span>
+                <span className="text-[var(--prism)] font-bold mt-0.5">0{i + 1}</span>
+                <span className="text-[var(--text-muted)] text-sm">{isAr ? t.ar : t.en}</span>
               </li>
             ))}
           </ul>

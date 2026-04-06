@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import NeuralBackgroundClient from '@/components/effects/NeuralBackgroundClient'
+import ThemeProvider from '@/components/providers/ThemeProvider'
 import '../globals.css'
 
 const spaceGrotesk = Space_Grotesk({
@@ -53,8 +53,7 @@ export async function generateMetadata({
       },
     },
     other: {
-      'theme-color': '#0D0D10',
-      'color-scheme': 'dark',
+      'color-scheme': 'light dark',
       'format-detection': 'telephone=no',
     },
   }
@@ -84,14 +83,16 @@ export default async function LocaleLayout({
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
       className={`${spaceGrotesk.variable} ${cairo.variable}`}
+      suppressHydrationWarning
     >
-      <body className="bg-[color:var(--color-bg)] text-[color:var(--color-white)] min-h-screen">
-        <NextIntlClientProvider messages={messages}>
-          <NeuralBackgroundClient />
-          <Navbar />
-          <main className="relative z-10">{children}</main>
-          <Footer />
-        </NextIntlClientProvider>
+      <body className="bg-[var(--bg)] text-[var(--text)] min-h-screen">
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

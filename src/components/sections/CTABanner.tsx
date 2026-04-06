@@ -1,66 +1,51 @@
 'use client'
 import { motion } from 'framer-motion'
 import Button from '@/components/ui/Button'
-import GlowText from '@/components/effects/GlowText'
+import TextReveal from '@/components/ui/TextReveal'
 
 export default function CTABanner({ locale }: { locale: string }) {
   const isAr = locale === 'ar'
 
+  const headline = isAr
+    ? 'مستعد للسيطرة على سوقك؟'
+    : 'Ready to Dominate Your Market?'
+
+  const body = isAr
+    ? 'توقف عن حرق ميزانيتك. ابدأ هندسة الرغبة اليوم.'
+    : 'Stop burning your budget. Start engineering desire today.'
+
+  const cta = isAr ? 'قدّم طلبك الآن' : 'Apply to Work With Us →'
+
   return (
-    <section className="relative z-10 py-32 overflow-hidden" style={{ background: '#0D0D10' }}>
-      {/* Mesh gradient — radial spots at corners */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(ellipse 50% 60% at 0% 0%, rgba(0,200,255,0.05), transparent),
-            radial-gradient(ellipse 50% 60% at 100% 100%, rgba(0,200,255,0.05), transparent),
-            radial-gradient(ellipse 60% 40% at 50% 50%, rgba(0,200,255,0.04), transparent)
-          `,
-        }}
-      />
+    <section className="relative z-10 overflow-hidden bg-[var(--accent)]">
+      {/* Subtle top rule */}
+      <div className="absolute inset-x-0 top-0 h-px bg-[var(--accent-hover)]" />
 
-      {/* Full-width diagonal cyan gradient line */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden"
-        aria-hidden="true"
-      >
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 1440 400"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <defs>
-            <linearGradient id="diag-line" x1="0" y1="0" x2="1440" y2="400" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#00C8FF" stopOpacity="0" />
-              <stop offset="35%" stopColor="#00C8FF" stopOpacity="0.25" />
-              <stop offset="65%" stopColor="#00C8FF" stopOpacity="0.25" />
-              <stop offset="100%" stopColor="#00C8FF" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <line x1="0" y1="380" x2="1440" y2="20" stroke="url(#diag-line)" strokeWidth="1.5" />
-        </svg>
-      </div>
-
-      <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
+      <div className="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="flex flex-col items-center gap-8"
         >
-          <h2 className="text-4xl md:text-6xl font-bold text-[color:var(--color-white)] mb-6 leading-tight">
-            {isAr ? 'مستعد' : 'Ready to'}{' '}
-            <GlowText intensity="high">{isAr ? 'للسيطرة على سوقك؟' : 'Dominate Your Market?'}</GlowText>
+          <h2 className="text-5xl md:text-7xl font-black leading-[0.95] tracking-tight text-[var(--bg)]">
+            <TextReveal delay={0.1} stagger={0.08}>
+              {headline}
+            </TextReveal>
           </h2>
-          <p className="text-[color:var(--color-gray-400)] text-lg mb-10">
-            {isAr
-              ? 'توقف عن حرق ميزانيتك. ابدأ هندسة الرغبة اليوم.'
-              : "Stop burning your budget. Start engineering desire today."}
+
+          <p className="text-base md:text-lg text-[var(--bg)] opacity-70 max-w-md leading-relaxed">
+            {body}
           </p>
-          <Button variant="primary" size="lg" href={`/${locale}/apply`}>
-            {isAr ? 'قدّم طلبك لهندسة تسويقك' : 'Apply to Engineer Your Marketing →'}
+
+          <Button
+            variant="outline"
+            size="lg"
+            href={`/${locale}/apply`}
+            className="border-[var(--bg)] text-[var(--bg)] hover:bg-[var(--bg)] hover:text-[var(--accent)]"
+          >
+            {cta}
           </Button>
         </motion.div>
       </div>

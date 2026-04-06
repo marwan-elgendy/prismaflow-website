@@ -22,11 +22,11 @@ const sizeClasses: Record<Size, string> = {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'bg-[color:var(--color-cyan)] text-[#0D0D10] font-semibold hover:shadow-[0_0_20px_rgba(0,200,255,0.5)] hover:scale-105 transition-all duration-200',
+    'bg-[var(--accent)] text-[var(--bg)] font-semibold hover:bg-[var(--accent-hover)] transition-colors duration-200',
   outline:
-    'border border-[color:var(--color-cyan)] text-[color:var(--color-cyan)] hover:shadow-[0_0_20px_rgba(0,200,255,0.3)] hover:scale-105 transition-all duration-200',
+    'border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--bg)] transition-colors duration-200',
   ghost:
-    'text-[color:var(--color-white)] hover:underline transition-all duration-200',
+    'text-[var(--text)] hover:underline transition-all duration-200',
 }
 
 export default function Button({
