@@ -1,140 +1,204 @@
 'use client'
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import SectionLabel from '@/components/ui/SectionLabel'
-import TextReveal from '@/components/ui/TextReveal'
+import { useInView } from '@/hooks/useInView'
 
-interface Step {
-  number: string
-  title: { en?: string; ar?: string }
-  description: { en?: string; ar?: string }
-}
-
-interface ProcessData {
-  headline?: { en?: string; ar?: string }
-  steps?: Step[]
-}
-
-const fallbackSteps: Step[] = [
+const steps = [
   {
     number: '01',
-    title: { en: 'Uncover', ar: 'الكشف' },
+    title: { en: 'Diagnose', ar: 'التشخيص' },
     description: {
-      en: 'We dive into the subconscious to identify the deep-seated desires and hidden objections that drive — or block — purchase decisions.',
-      ar: 'نغوص في اللاوعي لتحديد الرغبات العميقة والاعتراضات الخفية التي تحرّك — أو تعيق — قرارات الشراء.',
+      en: 'We map your market\'s unconscious decision-making patterns using neuroscience research.',
+      ar: 'نرسم خريطة أنماط اتخاذ القرار اللاواعية في سوقك باستخدام أبحاث علم الأعصاب.',
     },
   },
   {
     number: '02',
     title: { en: 'Engineer', ar: 'الهندسة' },
     description: {
-      en: 'We design a psychological purchase path — a frictionless slide that moves hesitant leads toward a confident yes.',
-      ar: 'نصمم مساراً نفسياً للشراء — مزلقاً سلساً يُحرّك العملاء المترددين نحو قرار شراء واثق.',
+      en: 'We design the cognitive path: stimuli, friction points, emotional triggers.',
+      ar: 'نصمم المسار الإدراكي: المحفزات، ونقاط الاحتكاك، والمشغلات العاطفية.',
     },
   },
   {
     number: '03',
-    title: { en: 'Dominate', ar: 'السيطرة' },
+    title: { en: 'Amplify', ar: 'التضخيم' },
     description: {
-      en: "We make your brand unforgettable. Competitors become irrelevant. Your market position becomes unassailable.",
-      ar: 'نجعل علامتك التجارية لا تُنسى. يصبح المنافسون غير ذوي صلة. تصبح مكانتك في السوق لا تُنتزع.',
+      en: 'We deploy multi-channel campaigns that bypass rational resistance.',
+      ar: 'نطلق حملات متعددة القنوات تتجاوز المقاومة العقلانية.',
     },
   },
 ]
 
-function ConnectingLine({ isRtl }: { isRtl: boolean }) {
-  const ref = useRef<SVGSVGElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-
+function SVGConnector({ inView, isRtl }: { inView: boolean; isRtl: boolean }) {
   return (
     <svg
-      ref={ref}
-      className="hidden md:block absolute top-[3.25rem] inset-x-0 w-full pointer-events-none"
-      height="2"
-      style={{ overflow: 'visible' }}
       aria-hidden="true"
+      style={{
+        position: 'absolute',
+        top: '4rem',
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: '2px',
+        overflow: 'visible',
+        pointerEvents: 'none',
+        display: 'none',
+      }}
+      className="pf-process-line"
     >
-      <motion.line
+      <line
         x1={isRtl ? '75%' : '25%'}
         y1="1"
         x2={isRtl ? '25%' : '75%'}
         y2="1"
-        stroke="var(--border)"
-        strokeWidth="1"
-        strokeDasharray="4 4"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
-        transition={{ duration: 1.4, ease: 'easeInOut', delay: 0.5 }}
+        stroke="#E8FF00"
+        strokeWidth="1.5"
+        strokeDasharray="2000"
+        strokeDashoffset={inView ? '0' : '2000'}
+        style={{
+          transition: inView ? 'stroke-dashoffset 1.4s var(--ease-out-expo) 0.6s' : 'none',
+          opacity: 0.4,
+        }}
       />
     </svg>
   )
 }
 
-export default function ProcessSection({ data, locale }: { data?: ProcessData | null; locale: string }) {
-  const isRtl = locale === 'ar'
-  const headline =
-    (isRtl ? data?.headline?.ar : data?.headline?.en) ||
-    (isRtl
-      ? 'PrismaFlow تملك خريطة الطريق إلى عقل المشتري'
-      : "PrismaFlow Holds the Roadmap to the Buyer's Mind")
+export default function ProcessSection({ locale, data }: { locale: string; data?: unknown }) {
+  const isAr = locale === 'ar'
+  const sectionRef = useRef<HTMLElement>(null)
+  const [ref, inView] = useInView(0.3)
 
-  const steps = data?.steps?.length ? data.steps : fallbackSteps
+  const mergeRef = (el: HTMLElement | null) => {
+    (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+    (ref as React.MutableRefObject<HTMLElement | null>).current = el
+  }
 
   return (
-    <section className="relative z-10 py-32 bg-[var(--bg)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section
+      ref={mergeRef as React.RefCallback<HTMLElement>}
+      style={{
+        backgroundColor: '#0A0A0A',
+        padding: '8rem 2rem',
+        borderTop: '1px solid #1A1A1A',
+      }}
+    >
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}
-        <div className="mb-20">
-          <SectionLabel className="mb-6">
-            {isRtl ? 'المسار' : 'THE ROADMAP'}
-          </SectionLabel>
-          <h2 className="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight text-[var(--text)] max-w-2xl">
-            <TextReveal delay={0.1} stagger={0.07}>
-              {headline}
-            </TextReveal>
+        <div style={{ marginBottom: '6rem' }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-space-grotesk), system-ui',
+              fontSize: '0.6875rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#E8FF00',
+              marginBottom: '2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+            }}
+          >
+            <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+            {isAr ? 'البروتوكول' : 'THE PROTOCOL'}
+          </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-bebas-neue), system-ui',
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              color: '#F5F5F5',
+              letterSpacing: '0.02em',
+              lineHeight: 1,
+            }}
+          >
+            {isAr ? 'خريطة الطريق إلى عقل المشتري' : 'THE ROADMAP TO THE BUYER\'S MIND'}
           </h2>
         </div>
 
-        {/* Steps — horizontal grid with animated connector */}
-        <div className="grid md:grid-cols-3 gap-12 relative">
-          <ConnectingLine isRtl={isRtl} />
+        {/* Steps */}
+        <div style={{ position: 'relative' }}>
+          {/* SVG connector line — shown on md+ via inline style override in CSS */}
+          <SVGConnector inView={inView} isRtl={isAr} />
 
-          {steps.map((step, i) => {
-            const title = (isRtl ? step.title.ar : step.title.en) || ''
-            const desc = (isRtl ? step.description.ar : step.description.en) || ''
-
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: i * 0.18, duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative pt-4"
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '3rem',
+            }}
+          >
+            {steps.map((step, i) => (
+              <div
+                key={step.number}
+                style={{
+                  paddingTop: '1rem',
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? 'translateY(0)' : 'translateY(40px)',
+                  transition: `opacity 0.6s var(--ease-out-expo) ${i * 0.2}s, transform 0.6s var(--ease-out-expo) ${i * 0.2}s`,
+                }}
               >
-                {/* Large muted number */}
+                {/* Large muted step number */}
                 <div
-                  className="text-[7rem] font-black leading-none select-none mb-6 text-[var(--border)]"
-                  style={{ letterSpacing: '-0.04em' }}
                   aria-hidden="true"
+                  style={{
+                    fontFamily: 'var(--font-jetbrains-mono), monospace',
+                    fontSize: 'clamp(5rem, 10vw, 8rem)',
+                    lineHeight: 1,
+                    color: '#1A1A1A',
+                    letterSpacing: '-0.04em',
+                    fontWeight: 700,
+                    marginBottom: '1.5rem',
+                    userSelect: 'none',
+                  }}
                 >
                   {step.number}
                 </div>
 
-                {/* Accent dot */}
-                <div className="w-2 h-2 rounded-full bg-[var(--prism)] mb-4" />
+                {/* Chartreuse accent dot */}
+                <div
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: '#E8FF00',
+                    marginBottom: '1.25rem',
+                    transform: inView ? 'scale(1)' : 'scale(0)',
+                    transition: `transform 0.4s var(--ease-out-expo) ${i * 0.2 + 0.3}s`,
+                  }}
+                />
 
-                <h3 className="text-2xl font-bold text-[var(--text)] mb-3 tracking-tight">
-                  {title}
+                <h3
+                  style={{
+                    fontFamily: 'var(--font-bebas-neue), system-ui',
+                    fontSize: '2rem',
+                    color: '#F5F5F5',
+                    letterSpacing: '0.02em',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  {isAr ? step.title.ar : step.title.en}
                 </h3>
-                <p className="text-[var(--text-muted)] text-sm leading-relaxed">
-                  {desc}
+
+                <p
+                  style={{
+                    fontFamily: 'var(--font-inter), system-ui',
+                    fontSize: '0.9375rem',
+                    color: '#666666',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  {isAr ? step.description.ar : step.description.en}
                 </p>
-              </motion.div>
-            )
-          })}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      <style>{`
+        @media (min-width: 768px) {
+          .pf-process-line { display: block !important; }
+        }
+      `}</style>
     </section>
   )
 }

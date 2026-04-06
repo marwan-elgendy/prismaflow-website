@@ -1,103 +1,189 @@
 'use client'
-import { motion } from 'framer-motion'
-import SectionLabel from '@/components/ui/SectionLabel'
-import TextReveal from '@/components/ui/TextReveal'
+import { useEffect, useState } from 'react'
 
 interface Testimonial {
+  quote: { en: string; ar: string }
   name: string
-  company: string
-  quote: { en?: string; ar?: string }
+  role: string
 }
 
-const fallback: Testimonial[] = [
+const testimonials: Testimonial[] = [
   {
-    name: 'Ahmed Al-Rashidi',
-    company: 'TechStart MENA',
     quote: {
-      en: 'PrismaFlow transformed our marketing from generic noise into laser-focused desire engineering. Sales doubled in three months.',
-      ar: 'حوّل PrismaFlow تسويقنا من ضجيج عام إلى هندسة رغبة دقيقة. تضاعفت المبيعات في ثلاثة أشهر.',
+      en: "They didn't just rebrand us — they rewired how our market perceives us. Three months in, conversion jumped 340%.",
+      ar: 'لم يعيدوا تسمية علامتنا فحسب — بل أعادوا برمجة كيف يرانا السوق. بعد ثلاثة أشهر، قفزت نسبة التحويل بنسبة 340%.',
     },
+    name: 'Ahmed Al-Rashid',
+    role: 'CEO, Meridian Foods',
   },
   {
-    name: 'Sara Mansouri',
-    company: 'Luxe Boutique',
     quote: {
-      en: "I was skeptical about neuromarketing. Now I can't imagine running a campaign without it. The results speak for themselves.",
-      ar: 'كنت متشككة في التسويق العصبي. الآن لا أستطيع تخيّل تشغيل حملة بدونه. النتائج تتحدث عن نفسها.',
+      en: 'Working with PrismaFlow felt like being handed a psychological superpower. They see what competitors miss.',
+      ar: 'العمل مع PrismaFlow كان كأنني حصلت على قوة نفسية خارقة. يرون ما يفوت المنافسين.',
     },
+    name: 'Sara Khoury',
+    role: 'CMO, NorthStar Ventures',
   },
   {
-    name: 'Khalid Nouri',
-    company: 'Atlas Consulting',
     quote: {
-      en: "The copy they wrote made our clients say 'that's exactly me!' — conversion rates went through the roof.",
-      ar: 'النصوص التي كتبوها جعلت عملاءنا يقولون "هذا أنا بالضبط!" — ارتفعت معدلات التحويل بشكل ملحوظ.',
+      en: 'Our ad spend dropped 60% and results tripled. Because now every peso is designed to persuade.',
+      ar: 'انخفض إنفاقنا الإعلاني بنسبة 60% وتضاعفت النتائج ثلاث مرات. لأن كل ريال الآن مصمم للإقناع.',
     },
+    name: 'Carlos Vega',
+    role: 'Founder, Aura Wellness',
   },
 ]
 
-export default function TestimonialsSection({
-  data,
-  locale,
-}: {
-  data?: Testimonial[] | null
-  locale: string
-}) {
+export default function TestimonialsSection({ locale, data }: { locale: string; data?: unknown }) {
   const isAr = locale === 'ar'
-  const testimonials = data?.length ? data : fallback
-  const sectionHeadline = isAr
-    ? 'عملاء سيطروا على أسواقهم معنا'
-    : 'Clients Who Dominated Their Markets With Us'
+  const [current, setCurrent] = useState(0)
+  const [hovered, setHovered] = useState(false)
+
+  useEffect(() => {
+    if (hovered) return
+    const interval = setInterval(() => {
+      setCurrent(prev => (prev + 1) % testimonials.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [hovered])
+
+  const t = testimonials[current]
 
   return (
-    <section className="relative z-10 py-32 bg-[var(--surface)]">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="mb-16">
-          <SectionLabel className="mb-6">
-            {isAr ? 'شهادات العملاء' : 'CLIENT WINS'}
-          </SectionLabel>
-          <h2 className="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight text-[var(--text)] max-w-xl">
-            <TextReveal delay={0.1} stagger={0.07}>
-              {sectionHeadline}
-            </TextReveal>
-          </h2>
-        </div>
+    <section
+      style={{
+        backgroundColor: '#0A0A0A',
+        padding: '8rem 2rem',
+        borderTop: '1px solid #1A1A1A',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Noise texture overlay */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          opacity: 0.015,
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+          backgroundSize: '256px 256px',
+          pointerEvents: 'none',
+        }}
+      />
 
-        {/* Testimonial cards */}
-        <div className="grid md:grid-cols-3 gap-px bg-[var(--border)]">
-          {testimonials.map((t, i) => {
-            const quote = (isAr ? t.quote.ar : t.quote.en) || ''
+      <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
+        {/* Section label */}
+        <p
+          style={{
+            fontFamily: 'var(--font-space-grotesk), system-ui',
+            fontSize: '0.6875rem',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#E8FF00',
+            marginBottom: '4rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+          }}
+        >
+          <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+          {isAr ? 'أصداء' : 'ECHOES'}
+        </p>
+
+        {/* Testimonial container */}
+        <div
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          style={{ position: 'relative', minHeight: '280px' }}
+        >
+          {testimonials.map((item, idx) => {
+            const isActive = idx === current
+            const quote = isAr ? item.quote.ar : item.quote.en
+
             return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ delay: i * 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="bg-[var(--surface)] p-8 md:p-10 flex flex-col gap-8"
+              <div
+                key={idx}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  opacity: isActive ? 1 : 0,
+                  transition: 'opacity 0.8s ease',
+                  pointerEvents: isActive ? 'auto' : 'none',
+                }}
               >
-                {/* Large opening quote mark */}
-                <span
-                  className="text-6xl leading-none font-black text-[var(--border)] select-none"
+                {/* Opening quote mark */}
+                <div
                   aria-hidden="true"
+                  style={{
+                    fontFamily: 'var(--font-bebas-neue), system-ui',
+                    fontSize: '6rem',
+                    lineHeight: 0.8,
+                    color: '#1A1A1A',
+                    marginBottom: '1.5rem',
+                    userSelect: 'none',
+                  }}
                 >
                   &ldquo;
-                </span>
+                </div>
 
-                {/* Quote text */}
-                <blockquote className="text-lg md:text-xl text-[var(--text)] font-medium leading-relaxed flex-1">
+                {/* Quote */}
+                <blockquote
+                  style={{
+                    fontFamily: 'var(--font-bebas-neue), system-ui',
+                    fontSize: 'clamp(1.75rem, 4vw, 3.5rem)',
+                    lineHeight: 1.1,
+                    color: '#F5F5F5',
+                    letterSpacing: '0.01em',
+                    marginBottom: '2.5rem',
+                    fontStyle: 'normal',
+                  }}
+                >
                   {quote}
                 </blockquote>
 
                 {/* Attribution */}
-                <div className="border-t border-[var(--border)] pt-6">
-                  <p className="text-sm font-bold text-[var(--text)]">{t.name}</p>
-                  <p className="text-xs text-[var(--text-dim)] mt-0.5 tracking-wide">{t.company}</p>
-                </div>
-              </motion.div>
+                <p
+                  style={{
+                    fontFamily: 'var(--font-inter), system-ui',
+                    fontSize: '1rem',
+                    color: '#888888',
+                  }}
+                >
+                  — {item.name},{' '}
+                  <span style={{ color: '#555555' }}>{item.role}</span>
+                </p>
+              </div>
             )
           })}
+        </div>
+
+        {/* Dot indicators */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.75rem',
+            marginTop: '4rem',
+            paddingTop: '10rem', // space below absolute content
+          }}
+        >
+          {testimonials.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrent(idx)}
+              aria-label={`Testimonial ${idx + 1}`}
+              style={{
+                width: idx === current ? '24px' : '8px',
+                height: '8px',
+                backgroundColor: idx === current ? '#E8FF00' : '#2A2A2A',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'width 0.3s ease, background-color 0.3s ease',
+              }}
+            />
+          ))}
         </div>
       </div>
     </section>

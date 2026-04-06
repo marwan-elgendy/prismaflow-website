@@ -1,211 +1,229 @@
 'use client'
-import { useState } from 'react'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import SectionLabel from '@/components/ui/SectionLabel'
-import TextReveal from '@/components/ui/TextReveal'
+import { useRef, useState } from 'react'
+import { useInView } from '@/hooks/useInView'
 
 interface Service {
-  icon?: string
-  title: { en?: string; ar?: string }
-  problem: { en?: string; ar?: string }
-  solution: { en?: string; ar?: string }
-  result: { en?: string; ar?: string }
+  number: string
+  title: { en: string; ar: string }
+  problem: { en: string; ar: string }
+  solution: { en: string; ar: string }
 }
 
-interface ServicesData {
-  headline?: { en?: string; ar?: string }
-  subheadline?: { en?: string; ar?: string }
-  services?: Service[]
-}
-
-const fallbackServices: Service[] = [
+const services: Service[] = [
   {
-    title: { en: 'Sales Funnel Engineering', ar: 'هندسة قمع المبيعات' },
+    number: '01',
+    title: {
+      en: 'Sales Funnel Engineering',
+      ar: 'هندسة قمع المبيعات',
+    },
     problem: {
-      en: 'Thousands visit your site — almost none convert.',
-      ar: 'آلاف يزورون موقعك — لا أحد تقريباً يشتري.',
+      en: 'Your funnel leaks at every stage',
+      ar: 'قمعك يتسرب في كل مرحلة',
     },
     solution: {
-      en: 'We build psychological purchase paths — frictionless funnels that guide visitors step-by-step to a confident buying decision.',
-      ar: 'نبني مسارات شراء نفسية — قنوات سلسة تقود الزوار خطوة بخطوة نحو قرار شراء واثق.',
-    },
-    result: {
-      en: 'Your website becomes a 24/7 revenue machine.',
-      ar: 'يتحول موقعك إلى آلة إيرادات تعمل على مدار الساعة.',
+      en: 'We map the psychological journey and eliminate every point of resistance',
+      ar: 'نرسم الرحلة النفسية ونزيل كل نقطة مقاومة',
     },
   },
   {
-    title: { en: 'Neuro-Copywriting', ar: 'الكتابة العصبية' },
+    number: '02',
+    title: {
+      en: 'Neuro-Copywriting',
+      ar: 'الكتابة العصبية',
+    },
     problem: {
-      en: 'Your copy reads like a press release. Nobody cares.',
-      ar: 'نصوصك تبدو كبيان صحفي. لا أحد يهتم.',
+      en: 'Words that describe, not persuade',
+      ar: 'كلمات تصف ولا تقنع',
     },
     solution: {
-      en: "We use pathological empathy to write copy that hits deep desires — making your customers say: 'Oh my god, that's exactly me!'",
-      ar: 'نستخدم التعاطف العميق لكتابة نصوص تصيب الرغبات العميقة — تجعل عملاءك يقولون: "هذا أنا بالضبط!"',
-    },
-    result: {
-      en: 'Irresistible messaging that accelerates every purchase decision.',
-      ar: 'رسائل لا تُقاوم تُسرّع كل قرار شراء.',
+      en: 'We write copy that speaks to the subconscious first, rationale second',
+      ar: 'نكتب نصوصاً تخاطب اللاوعي أولاً والعقل ثانياً',
     },
   },
   {
-    title: { en: 'Mental Movies Production', ar: 'إنتاج الأفلام الذهنية' },
+    number: '03',
+    title: {
+      en: 'Mental Movies',
+      ar: 'الأفلام الذهنية',
+    },
     problem: {
-      en: "Traditional ads can't capture the modern consumer's attention.",
-      ar: 'الإعلانات التقليدية عاجزة عن استحواذ انتباه المستهلك الحديث.',
+      en: 'Your brand is forgettable',
+      ar: 'علامتك التجارية منسية',
     },
     solution: {
-      en: 'We fuse sales psychology with cinematic craft to create mental movies — your customer experiences owning your product before they buy it.',
-      ar: 'ندمج علم نفس المبيعات مع الصناعة السينمائية لصناعة أفلام ذهنية — يشعر عميلك بامتلاك منتجك قبل أن يشتريه.',
-    },
-    result: {
-      en: 'Ads that steal attention and plant desire in under 5 seconds.',
-      ar: 'إعلانات تسرق الانتباه وتزرع الرغبة في أقل من 5 ثوانٍ.',
+      en: 'We engineer multi-sensory brand memories that stick unconsciously',
+      ar: 'نهندس ذكريات علامة متعددة الحواس تعلق دون وعي',
     },
   },
 ]
 
-const cardNumbers = ['01', '02', '03']
-
 interface ServiceCardProps {
   service: Service
-  index: number
   locale: string
-  cardNum: string
+  index: number
 }
 
-function ServiceCard({ service, index, locale, cardNum }: ServiceCardProps) {
-  const [hovered, setHovered] = useState(false)
+function ServiceCard({ service, locale, index }: ServiceCardProps) {
   const isAr = locale === 'ar'
+  const [hovered, setHovered] = useState(false)
+  const cardRef = useRef<HTMLElement>(null)
+  const [ref, inView] = useInView(0.2)
 
-  const title = (isAr ? service.title.ar : service.title.en) || ''
-  const problem = (isAr ? service.problem.ar : service.problem.en) || ''
-  const solution = (isAr ? service.solution.ar : service.solution.en) || ''
-  const result = (isAr ? service.result.ar : service.result.en) || ''
+  const mergeRef = (el: HTMLElement | null) => {
+    (cardRef as React.MutableRefObject<HTMLElement | null>).current = el;
+    (ref as React.MutableRefObject<HTMLElement | null>).current = el
+  }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ delay: index * 0.12, duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+    <div
+      ref={mergeRef as React.RefCallback<HTMLDivElement>}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        transform: hovered
-          ? 'perspective(1000px) rotateX(-2deg) rotateY(2deg) translateY(-6px)'
-          : 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)',
-        transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        position: 'relative',
+        border: '1px solid #1A1A1A',
+        backgroundColor: hovered ? '#111111' : 'transparent',
+        padding: '2.5rem',
+        transform: hovered ? 'scale(1.01) rotate(0.5deg)' : 'scale(1) rotate(0deg)',
+        transition: 'background-color 0.3s ease, transform 0.3s ease',
+        cursor: 'default',
+        opacity: inView ? 1 : 0,
+        marginTop: inView ? '0' : '24px',
+        willChange: 'opacity, margin-top',
+        // Use CSS transition for fade-up
+        animationDelay: `${index * 0.12}s`,
       }}
-      className="relative bg-[var(--surface)] border border-[var(--border)] rounded-sm overflow-hidden cursor-default group"
     >
-      {/* Background number */}
+      {/* Left border draw */}
       <div
-        className="absolute bottom-0 right-4 font-black leading-none select-none pointer-events-none text-[var(--surface-alt)] transition-opacity duration-300"
-        style={{ fontSize: '10rem', lineHeight: 1, opacity: hovered ? 0 : 1 }}
-        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '3px',
+          height: '100%',
+          backgroundColor: '#E8FF00',
+          transformOrigin: 'top',
+          transform: inView ? 'scaleY(1)' : 'scaleY(0)',
+          transition: `transform 0.4s var(--ease-out-expo) ${index * 0.12 + 0.1}s`,
+        }}
+      />
+
+      {/* Number */}
+      <p
+        style={{
+          fontFamily: 'var(--font-jetbrains-mono), monospace',
+          fontSize: '0.75rem',
+          color: '#E8FF00',
+          marginBottom: '1.5rem',
+          letterSpacing: '0.1em',
+        }}
       >
-        {cardNum}
-      </div>
+        {service.number}
+      </p>
 
-      <div className="relative z-10 p-8 md:p-10 flex flex-col h-full min-h-[22rem]">
-        {/* Card number + divider */}
-        <div className="flex items-center gap-3 mb-6">
-          <span className="text-xs font-semibold tracking-widest text-[var(--text-dim)] tabular-nums">
-            {cardNum}
-          </span>
-          <div className="flex-1 h-px bg-[var(--border)]" />
-        </div>
+      {/* Title */}
+      <h3
+        style={{
+          fontFamily: 'var(--font-bebas-neue), system-ui',
+          fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+          color: '#F5F5F5',
+          lineHeight: 1,
+          letterSpacing: '0.02em',
+          marginBottom: '1.25rem',
+        }}
+      >
+        {isAr ? service.title.ar : service.title.en}
+      </h3>
 
-        {/* Title */}
-        <h3 className="text-2xl font-bold text-[var(--text)] mb-3 leading-tight tracking-tight">
-          {title}
-        </h3>
+      {/* Problem */}
+      <p
+        style={{
+          fontFamily: 'var(--font-space-grotesk), system-ui',
+          fontSize: '0.875rem',
+          color: '#555555',
+          marginBottom: '1.5rem',
+          lineHeight: 1.6,
+          fontStyle: 'italic',
+        }}
+      >
+        {isAr ? service.problem.ar : service.problem.en}
+      </p>
 
-        {/* Problem (always visible) */}
-        <p className="text-[var(--text-muted)] text-sm italic mb-6 leading-relaxed">
-          {problem}
-        </p>
-
-        {/* Hover-revealed details */}
-        <div
-          style={{
-            maxHeight: hovered ? '300px' : '0px',
-            opacity: hovered ? 1 : 0,
-            overflow: 'hidden',
-            transition: 'max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease',
-          }}
-        >
-          <p className="text-[var(--text)] text-sm leading-relaxed mb-5">
-            {solution}
-          </p>
-          <div className="border-t border-[var(--border)] pt-4 mb-5">
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--prism)]">
-              {isAr ? 'النتيجة' : 'Result'}
-            </span>
-            <p className="text-[var(--text)] text-sm mt-1.5 font-medium">
-              {result}
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom link */}
-        <div className="mt-auto pt-2">
-          <Link
-            href={`/${locale}/blog`}
-            className="text-[10px] tracking-widest uppercase font-semibold text-[var(--text-dim)] hover:text-[var(--prism)] transition-colors duration-200"
-          >
-            {isAr ? 'اقرأ المقالات ←' : 'Read our research →'}
-          </Link>
-        </div>
-      </div>
-    </motion.div>
+      {/* Solution */}
+      <p
+        style={{
+          fontFamily: 'var(--font-inter), system-ui',
+          fontSize: '1rem',
+          color: '#F5F5F5',
+          lineHeight: 1.7,
+          opacity: hovered ? 1 : 0.7,
+          transition: 'opacity 0.3s ease',
+        }}
+      >
+        {isAr ? service.solution.ar : service.solution.en}
+      </p>
+    </div>
   )
 }
 
-export default function ServicesSection({ data, locale }: { data?: ServicesData | null; locale: string }) {
+export default function ServicesSection({ locale, data }: { locale: string; data?: unknown }) {
   const isAr = locale === 'ar'
-  const headline =
-    (isAr ? data?.headline?.ar : data?.headline?.en) ||
-    (isAr
-      ? 'لا نبيع خدمات تسويقية. نصنع تحولات.'
-      : "We Don't Sell Marketing Services. We Create Transformations.")
-
-  const services = data?.services?.length ? data.services : fallbackServices
 
   return (
-    <section className="relative z-10 py-32 bg-[var(--surface-alt)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section
+      style={{
+        backgroundColor: '#0A0A0A',
+        padding: '8rem 2rem',
+        borderTop: '1px solid #1A1A1A',
+      }}
+    >
+      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         {/* Header */}
-        <div className="grid lg:grid-cols-2 gap-8 items-end mb-16">
-          <div>
-            <SectionLabel className="mb-6">
-              {isAr ? 'ترسانتنا' : 'OUR ARSENAL'}
-            </SectionLabel>
-            <h2 className="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight text-[var(--text)]">
-              <TextReveal delay={0.1} stagger={0.07}>
-                {headline}
-              </TextReveal>
-            </h2>
-          </div>
-          <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-sm lg:ml-auto">
-            {isAr
-              ? 'حوّم فوق كل خدمة لاكتشاف كيف نهندس الرغبة لعلامتك التجارية.'
-              : 'Hover over each service to discover how we engineer desire for your brand.'}
+        <div style={{ marginBottom: '4rem' }}>
+          <p
+            style={{
+              fontFamily: 'var(--font-space-grotesk), system-ui',
+              fontSize: '0.6875rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#E8FF00',
+              marginBottom: '2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+            }}
+          >
+            <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+            {isAr ? 'ترسانتنا' : 'THE ARSENAL'}
           </p>
+          <h2
+            style={{
+              fontFamily: 'var(--font-bebas-neue), system-ui',
+              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+              color: '#F5F5F5',
+              letterSpacing: '0.02em',
+              lineHeight: 1,
+            }}
+          >
+            {isAr ? 'ترسانة الإقناع' : 'THE PERSUASION ARSENAL'}
+          </h2>
         </div>
 
-        {/* Cards */}
-        <div className="grid md:grid-cols-3 gap-4">
-          {services.map((svc, i) => (
+        {/* Cards grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem',
+          }}
+        >
+          {services.map((service, i) => (
             <ServiceCard
-              key={i}
-              service={svc}
-              index={i}
+              key={service.number}
+              service={service}
               locale={locale}
-              cardNum={cardNumbers[i] || `0${i + 1}`}
+              index={i}
             />
           ))}
         </div>

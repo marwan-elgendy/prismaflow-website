@@ -246,6 +246,33 @@ body::after {
   background-size: 200px 200px;
 }
 
+/* ─── V3 Dark Brutalist Tokens ─────────────────────────────── */
+:root {
+  --chartreuse: #E8FF00;
+  --dark-bg: #0A0A0A;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── V3 Keyframes ─────────────────────────────────────────── */
+@keyframes pf-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+@keyframes pf-prism-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes pf-fade-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pf-line-draw {
+  from { stroke-dashoffset: 2000; }
+  to { stroke-dashoffset: 0; }
+}
+}
+
 /* ─── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

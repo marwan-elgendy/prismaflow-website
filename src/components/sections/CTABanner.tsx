@@ -1,53 +1,117 @@
 'use client'
-import { motion } from 'framer-motion'
-import Button from '@/components/ui/Button'
-import TextReveal from '@/components/ui/TextReveal'
+import { useState } from 'react'
+import Link from 'next/link'
+import { useInView } from '@/hooks/useInView'
 
 export default function CTABanner({ locale }: { locale: string }) {
   const isAr = locale === 'ar'
+  const [ref, inView] = useInView(0.3)
+  const [btnHovered, setBtnHovered] = useState(false)
 
-  const headline = isAr
-    ? 'مستعد للسيطرة على سوقك؟'
-    : 'Ready to Dominate Your Market?'
-
-  const body = isAr
+  const headline = isAr ? 'مستعد لتصبح لا يُقاوم؟' : 'Ready to be irresistible?'
+  const subline = isAr
     ? 'توقف عن حرق ميزانيتك. ابدأ هندسة الرغبة اليوم.'
     : 'Stop burning your budget. Start engineering desire today.'
-
-  const cta = isAr ? 'قدّم طلبك الآن' : 'Apply to Work With Us →'
+  const cta = isAr ? 'قدّم طلبك الآن' : 'Apply Now →'
 
   return (
-    <section className="relative z-10 overflow-hidden bg-[var(--accent)]">
-      {/* Subtle top rule */}
-      <div className="absolute inset-x-0 top-0 h-px bg-[var(--accent-hover)]" />
+    <section
+      ref={ref as unknown as React.Ref<HTMLElement>}
+      style={{
+        backgroundColor: '#E8FF00',
+        padding: '8rem 2rem',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Subtle grid texture */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage:
+            'linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
+        }}
+      />
 
-      <div className="max-w-5xl mx-auto px-6 py-28 md:py-36 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex flex-col items-center gap-8"
+      <div
+        style={{
+          maxWidth: '900px',
+          margin: '0 auto',
+          textAlign: 'center',
+          position: 'relative',
+        }}
+      >
+        {/* Headline */}
+        <h2
+          style={{
+            fontFamily: 'var(--font-bebas-neue), system-ui',
+            fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+            lineHeight: 0.9,
+            color: '#0A0A0A',
+            letterSpacing: '-0.01em',
+            marginBottom: '1.5rem',
+            opacity: inView ? 1 : 0,
+            transform: inView ? 'translateY(0)' : 'translateY(32px)',
+            transition: 'opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo)',
+          }}
         >
-          <h2 className="text-5xl md:text-7xl font-black leading-[0.95] tracking-tight text-[var(--bg)]">
-            <TextReveal delay={0.1} stagger={0.08}>
-              {headline}
-            </TextReveal>
-          </h2>
+          {headline}
+        </h2>
 
-          <p className="text-base md:text-lg text-[var(--bg)] opacity-70 max-w-md leading-relaxed">
-            {body}
-          </p>
+        {/* Subline */}
+        <p
+          style={{
+            fontFamily: 'var(--font-space-grotesk), system-ui',
+            fontSize: '1.25rem',
+            color: '#0A0A0A',
+            opacity: inView ? 0.7 : 0,
+            transform: inView ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.8s var(--ease-out-expo) 0.15s, transform 0.8s var(--ease-out-expo) 0.15s',
+            marginBottom: '3rem',
+            maxWidth: '520px',
+            margin: '0 auto 3rem',
+            lineHeight: 1.5,
+          }}
+        >
+          {subline}
+        </p>
 
-          <Button
-            variant="outline"
-            size="lg"
+        {/* Button */}
+        <div
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.8s var(--ease-out-expo) 0.3s, transform 0.8s var(--ease-out-expo) 0.3s',
+          }}
+        >
+          <Link
             href={`/${locale}/apply`}
-            className="border-[var(--bg)] text-[var(--bg)] hover:bg-[var(--bg)] hover:text-[var(--accent)]"
+            onMouseEnter={() => setBtnHovered(true)}
+            onMouseLeave={() => setBtnHovered(false)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '1.125rem 2.5rem',
+              backgroundColor: btnHovered ? 'transparent' : '#0A0A0A',
+              border: '2px solid #0A0A0A',
+              color: btnHovered ? '#0A0A0A' : '#FFFFFF',
+              fontFamily: 'var(--font-space-grotesk), system-ui',
+              fontWeight: 700,
+              fontSize: '0.9375rem',
+              textDecoration: 'none',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              transform: btnHovered ? 'scale(1.02)' : 'scale(1)',
+              transition: 'background-color 0.2s ease, color 0.2s ease, transform 0.2s ease',
+            }}
           >
             {cta}
-          </Button>
-        </motion.div>
+          </Link>
+        </div>
       </div>
     </section>
   )

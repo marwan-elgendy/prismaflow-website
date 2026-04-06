@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Cairo, Inter, JetBrains_Mono } from 'next/font/google'
+import { Space_Grotesk, Cairo, JetBrains_Mono, Inter, Bebas_Neue } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
@@ -22,15 +22,22 @@ const cairo = Cairo({
   display: 'swap',
 })
 
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-var',
+  display: 'swap',
+})
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter-var',
   display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
+const bebasNeue = Bebas_Neue({
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-jetbrains-var',
+  variable: '--font-bebas-neue-var',
   display: 'swap',
 })
 
@@ -95,7 +102,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${spaceGrotesk.variable} ${cairo.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${spaceGrotesk.variable} ${cairo.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable}`}
       suppressHydrationWarning
     >
       <head>
