@@ -186,10 +186,10 @@ export default async function HomePage({
 
       {/* Recent blog posts */}
       {posts.length > 0 && (
-        <section className="relative z-10 py-24 bg-[color:var(--color-bg)]" aria-label={locale === 'ar' ? 'أحدث المقالات' : 'Latest blog posts'}>
+        <section className="relative z-10 py-24 bg-[var(--bg)]" aria-label={locale === 'ar' ? 'أحدث المقالات' : 'Latest blog posts'}>
           <div className="max-w-7xl mx-auto px-6">
             <SectionLabel className="mb-4">{locale === 'ar' ? 'أحدث المقالات' : 'LATEST INSIGHTS'}</SectionLabel>
-            <h2 className="text-3xl font-bold text-[color:var(--color-white)] mb-12">
+            <h2 className="text-3xl font-bold text-[var(--text)] mb-12">
               {locale === 'ar' ? 'من مدونة التسويق العصبي' : 'From the Neuromarketing Blog'}
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

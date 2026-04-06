@@ -1,37 +1,64 @@
 @import "tailwindcss";
 
+/* ─── Light Mode (default) ─────────────────────────────────── */
 :root {
-  --color-bg: #0D0D10;
-  --color-surface: #14141A;
-  --color-border: #1E1E28;
-  --color-cyan: #00C8FF;
-  --color-cyan-glow: rgba(0, 200, 255, 0.15);
-  --color-white: #FFFFFF;
-  --color-gray-400: #8888A0;
-  --color-gray-600: #3A3A50;
+  --bg:          #FAFAF8;
+  --surface:     #FFFFFF;
+  --surface-alt: #F2F0ED;
+  --text:        #1A1A1A;
+  --text-muted:  #6B6B6B;
+  --text-dim:    #999999;
+  --border:      #E5E3DF;
+  --accent:      #0A0A0A;
+  --accent-hover:#333333;
+  --prism:       #00A3CC;
+  --prism-glow:  rgba(0,163,204,0.08);
 }
 
+/* ─── Dark Mode ────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg:          #0C0C0E;
+  --surface:     #141416;
+  --surface-alt: #1A1A1E;
+  --text:        #F0F0EC;
+  --text-muted:  #8A8A8A;
+  --text-dim:    #5A5A5A;
+  --border:      #2A2A2E;
+  --accent:      #F0F0EC;
+  --accent-hover:#CCCCCC;
+  --prism:       #00C8FF;
+  --prism-glow:  rgba(0,200,255,0.1);
+}
+
+/* ─── Tailwind v4 — expose custom tokens ───────────────────── */
 @theme inline {
-  --color-bg: #0D0D10;
-  --color-surface: #14141A;
-  --color-border: #1E1E28;
-  --color-cyan: #00C8FF;
-  --color-white: #FFFFFF;
-  --color-gray-400: #8888A0;
-  --color-gray-600: #3A3A50;
-  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --color-bg:          var(--bg);
+  --color-surface:     var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-text:        var(--text);
+  --color-text-muted:  var(--text-muted);
+  --color-text-dim:    var(--text-dim);
+  --color-border:      var(--border);
+  --color-accent:      var(--accent);
+  --color-accent-hover:var(--accent-hover);
+  --color-prism:       var(--prism);
+
+  --font-sans:   var(--font-space-grotesk), system-ui, sans-serif;
   --font-arabic: var(--font-cairo), system-ui, sans-serif;
 }
 
+/* ─── Base ─────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  color-scheme: light dark;
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-white);
+  background-color: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
   min-height: 100vh;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 [dir="rtl"] body {
@@ -39,18 +66,13 @@ body {
   line-height: 1.9;
 }
 
-/* Cyan glow utility */
-.glow-cyan {
-  text-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
-}
-
-/* Form inputs */
+/* ─── Form inputs ──────────────────────────────────────────── */
 .form-input {
   display: block;
   width: 100%;
-  background: #14141A;
-  border: 1px solid var(--color-border);
-  color: var(--color-white);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
   border-radius: 2px;
   padding: 0.75rem 1rem;
   font-size: 0.9375rem;
@@ -58,24 +80,120 @@ body {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .form-input::placeholder {
-  color: var(--color-gray-600);
+  color: var(--text-dim);
 }
 .form-input:focus {
-  border-color: var(--color-cyan);
-  box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.12);
+  border-color: var(--prism);
+  box-shadow: 0 0 0 2px var(--prism-glow);
 }
 
-/* Scrollbar */
+/* ─── Scrollbar ────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: var(--border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-cyan);
+  background: var(--prism);
+}
+
+/* ─── Prose (blog article body) ───────────────────────────── */
+.prose {
+  color: var(--text-muted);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  max-width: none;
+}
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+.prose h2 { font-size: 1.75rem; }
+.prose h3 { font-size: 1.375rem; }
+.prose p { margin-bottom: 1.5rem; }
+.prose strong { color: var(--text); font-weight: 700; }
+.prose em { font-style: italic; }
+.prose a {
+  color: var(--prism);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose a:hover { opacity: 0.8; }
+.prose ul,
+.prose ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+[dir="rtl"] .prose ul,
+[dir="rtl"] .prose ol {
+  padding-left: 0;
+  padding-right: 1.5rem;
+}
+.prose ul { list-style-type: disc; }
+.prose ol { list-style-type: decimal; }
+.prose li { margin-bottom: 0.5rem; }
+.prose blockquote {
+  border-left: 3px solid var(--prism);
+  padding-left: 1.25rem;
+  margin: 2rem 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+[dir="rtl"] .prose blockquote {
+  border-left: none;
+  border-right: 3px solid var(--prism);
+  padding-left: 0;
+  padding-right: 1.25rem;
+}
+.prose code {
+  background: var(--surface-alt);
+  color: var(--prism);
+  padding: 0.15em 0.4em;
+  border-radius: 2px;
+  font-size: 0.875em;
+  font-family: ui-monospace, monospace;
+}
+.prose pre {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: var(--text);
+}
+.prose img {
+  width: 100%;
+  height: auto;
+  margin: 2rem 0;
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+
+/* ─── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
