@@ -1,6 +1,4 @@
 import { MetadataRoute } from 'next'
-import { client } from '@/lib/sanity'
-import { allPostsQuery } from '@/lib/queries'
 
 const BASE_URL = 'https://prismaflow.net'
 const locales = ['en', 'ar']
@@ -15,10 +13,8 @@ const staticRouteConfig: Array<{ path: string; priority: number; changeFrequency
 
 const now = new Date()
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await client.fetch(allPostsQuery).catch(() => [])
-
-  const staticEntries: MetadataRoute.Sitemap = locales.flatMap((locale) =>
+export default function sitemap(): MetadataRoute.Sitemap {
+  return locales.flatMap((locale) =>
     staticRouteConfig.map(({ path, priority, changeFrequency }) => ({
       url: `${BASE_URL}/${locale}${path}`,
       lastModified: now,
@@ -26,16 +22,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority,
     }))
   )
-
-  const postEntries: MetadataRoute.Sitemap = (posts ?? []).flatMap(
-    (post: { slug: string; publishedAt?: string }) =>
-      locales.map((locale) => ({
-        url: `${BASE_URL}/${locale}/blog/${post.slug}`,
-        lastModified: post.publishedAt ? new Date(post.publishedAt) : now,
-        changeFrequency: 'weekly' as const,
-        priority: 0.7,
-      }))
-  )
-
-  return [...staticEntries, ...postEntries]
 }
