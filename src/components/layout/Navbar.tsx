@@ -3,9 +3,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import LanguageSwitcher from './LanguageSwitcher'
-import ThemeToggle from '@/components/ui/ThemeToggle'
 
 export default function Navbar() {
   const locale = useLocale()
@@ -20,7 +19,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -37,23 +35,20 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-[var(--bg)]/90 backdrop-blur-md border-b border-[var(--border)]'
-          : ''
+          ? 'bg-[rgba(10,10,10,0.95)] backdrop-blur-md border-b border-[var(--border)]'
+          : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link href={`/${locale}`} className="flex flex-col leading-tight group">
-          <span className="text-xl font-bold tracking-tight">
-            <span className="text-[var(--text)]">PRISMA</span>
-            <span className="text-[var(--prism)]">FLOW</span>
-          </span>
-          <span className="text-[10px] tracking-widest text-[var(--text-dim)] uppercase">
-            Shaping The Desire
-          </span>
+      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        {/* Wordmark */}
+        <Link
+          href={`/${locale}`}
+          className="text-[var(--text)] font-[family-name:var(--font-clash)] font-bold text-xl tracking-tight leading-none hover:opacity-80 transition-opacity"
+        >
+          PRISMA<span className="text-[var(--prism)]">FLOW</span>
         </Link>
 
-        {/* Desktop nav links */}
+        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => {
             const isActive = pathname === l.href
@@ -61,7 +56,7 @@ export default function Navbar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`relative text-sm pb-0.5 transition-colors ${
+                className={`relative text-xs tracking-wider uppercase pb-0.5 transition-colors duration-[var(--duration-normal)] ${
                   isActive
                     ? 'text-[var(--text)]'
                     : 'text-[var(--text-muted)] hover:text-[var(--text)]'
@@ -69,24 +64,19 @@ export default function Navbar() {
               >
                 {l.label}
                 {isActive && (
-                  <motion.span
-                    layoutId="nav-underline"
-                    className="absolute bottom-0 left-0 right-0 h-px bg-[var(--text)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
+                  <span className="absolute bottom-0 left-0 right-0 h-px bg-[var(--prism)]" />
                 )}
               </Link>
             )
           })}
         </div>
 
-        {/* Right side */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Right controls */}
+        <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher />
-          <ThemeToggle />
           <Link
             href={`/${locale}/apply`}
-            className="px-4 py-2 text-sm font-semibold bg-[var(--accent)] text-[var(--bg)] rounded-sm hover:bg-[var(--accent-hover)] transition-colors"
+            className="px-5 py-2.5 text-xs tracking-wider uppercase font-[family-name:var(--font-clash)] font-semibold bg-[var(--prism)] text-[var(--bg)] hover:bg-[var(--bg)] hover:text-[var(--prism)] border border-[var(--prism)] transition-all duration-[var(--duration-normal)] hover:scale-[1.02] active:scale-[0.98]"
           >
             {t('apply')}
           </Link>
@@ -94,15 +84,15 @@ export default function Navbar() {
 
         {/* Hamburger */}
         <button
-          className="md:hidden flex flex-col gap-1.5 p-1 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
+          className="md:hidden flex flex-col gap-[5px] p-1 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
           aria-expanded={open}
           aria-controls="mobile-menu"
         >
-          <span className={`block w-5 h-px bg-current transition-all duration-300 origin-center ${open ? 'rotate-45 translate-y-[7px]' : ''}`} />
+          <span className={`block w-5 h-px bg-current transition-all duration-300 origin-center ${open ? 'rotate-45 translate-y-[6px]' : ''}`} />
           <span className={`block w-5 h-px bg-current transition-all duration-300 ${open ? 'opacity-0 scale-x-0' : ''}`} />
-          <span className={`block w-5 h-px bg-current transition-all duration-300 origin-center ${open ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+          <span className={`block w-5 h-px bg-current transition-all duration-300 origin-center ${open ? '-rotate-45 -translate-y-[6px]' : ''}`} />
         </button>
       </div>
 
@@ -116,24 +106,24 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden fixed inset-0 top-[65px] bg-[var(--bg)] z-40 flex flex-col px-6 pt-10 pb-8"
+            className="md:hidden fixed inset-0 top-[73px] bg-[var(--bg)] z-40 flex flex-col px-6 pt-12 pb-8"
           >
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-0">
               {links.map((l, i) => {
                 const isActive = pathname === l.href
                 return (
                   <motion.div
                     key={l.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06, duration: 0.25 }}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05, duration: 0.25 }}
                   >
                     <Link
                       href={l.href}
-                      className={`block py-4 text-2xl font-semibold border-b border-[var(--border)] transition-colors ${
+                      className={`block py-5 text-[2.75rem] leading-none font-[family-name:var(--font-clash)] font-bold border-b border-[var(--border)] transition-colors ${
                         isActive
-                          ? 'text-[var(--text)]'
-                          : 'text-[var(--text-muted)] hover:text-[var(--text)]'
+                          ? 'text-[var(--prism)]'
+                          : 'text-[var(--text)] hover:text-[var(--prism)]'
                       }`}
                       onClick={() => setOpen(false)}
                     >
@@ -143,23 +133,21 @@ export default function Navbar() {
                 )
               })}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: links.length * 0.06, duration: 0.25 }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: links.length * 0.05, duration: 0.25 }}
               >
                 <Link
                   href={`/${locale}/apply`}
-                  className="block py-4 text-2xl font-semibold border-b border-[var(--border)] text-[var(--prism)]"
+                  className="block py-5 text-[2.75rem] leading-none font-[family-name:var(--font-clash)] font-bold border-b border-[var(--border)] text-[var(--prism)]"
                   onClick={() => setOpen(false)}
                 >
                   {t('apply')}
                 </Link>
               </motion.div>
             </div>
-
-            <div className="mt-8 flex items-center gap-4">
+            <div className="mt-10">
               <LanguageSwitcher />
-              <ThemeToggle />
             </div>
           </motion.div>
         )}
