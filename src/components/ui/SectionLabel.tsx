@@ -6,8 +6,11 @@ interface SectionLabelProps {
 export default function SectionLabel({ children, className = '' }: SectionLabelProps) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="w-1.5 h-1.5 rounded-full bg-[var(--prism)]" />
-      <span className="text-[var(--prism)] text-xs font-semibold tracking-widest uppercase">
+      <span
+        className="inline-block w-1.5 h-1.5 bg-[var(--prism)]"
+        aria-hidden="true"
+      />
+      <span className="text-[var(--prism)] text-xs font-normal tracking-widest uppercase font-[family-name:var(--font-jetbrains)]">
         {children}
       </span>
     </div>
