@@ -1,103 +1,182 @@
 'use client'
-import { motion } from 'framer-motion'
-import SectionLabel from '@/components/ui/SectionLabel'
-import TextReveal from '@/components/ui/TextReveal'
+import { useRef } from 'react'
+import { useInView } from '@/hooks/useInView'
+import { useCounter } from '@/hooks/useCounter'
 
-interface ProblemData {
-  headline?: { en?: string; ar?: string }
-  body?: { en?: string; ar?: string }
+interface StatProps {
+  prefix?: string
+  target: number
+  suffix?: string
+  label: string
+  delay: number
+  start: boolean
 }
 
-const fallback = {
-  headline: {
-    en: 'Are You Burning Your Budget on Ads Everyone Ignores?',
-    ar: 'هل تحرق ميزانيتك على إعلانات يتجاهلها الجميع؟',
-  },
-  body: {
-    en: "The problem isn't your product. It's generic marketing that ignores consumer psychology. Every day without neuromarketing is a day you hand your customers to your competitors.",
-    ar: 'المشكلة ليست في منتجك. بل في التسويق النمطي الذي يتجاهل علم نفس المستهلك. كل يوم بدون التسويق العصبي هو يوم تسلّم فيه عملاءك لمنافسيك.',
-  },
-}
-
-const painPoints = [
-  {
-    number: '01',
-    en: { title: 'High Spend, Low Return', body: 'Ad budgets vanish into campaigns that generate impressions, not conversions.' },
-    ar: { title: 'إنفاق مرتفع، عائد منخفض', body: 'تختفي ميزانيات الإعلانات في حملات تولّد مشاهدات لا تحويلات.' },
-  },
-  {
-    number: '02',
-    en: { title: 'Copy Nobody Reads', body: 'Generic messaging blends into the noise, leaving your audience unmoved and uninterested.' },
-    ar: { title: 'نصوص لا يقرأها أحد', body: 'الرسائل العامة تذوب في الضجيج، وتبقي جمهورك غير متأثر وغير مهتم.' },
-  },
-  {
-    number: '03',
-    en: { title: 'Brand Lost in the Noise', body: 'Competitors capture the attention your brand deserves because psychology is on their side.' },
-    ar: { title: 'علامة تجارية ضائعة', body: 'يستحوذ المنافسون على الانتباه الذي تستحقه علامتك لأن علم النفس في صفّهم.' },
-  },
-]
-
-export default function ProblemSection({ data, locale }: { data?: ProblemData | null; locale: string }) {
-  const headline =
-    (locale === 'ar' ? data?.headline?.ar : data?.headline?.en) ||
-    fallback.headline[locale as 'en' | 'ar'] ||
-    fallback.headline.en
-  const body =
-    (locale === 'ar' ? data?.body?.ar : data?.body?.en) ||
-    fallback.body[locale as 'en' | 'ar'] ||
-    fallback.body.en
+function StatCounter({ prefix = '', target, suffix = '', label, delay, start }: StatProps) {
+  const count = useCounter(target, 1500, start)
 
   return (
-    <section className="relative z-10 py-32 bg-[var(--surface-alt)]">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Editorial layout: text left, grid right */}
-        <div className="grid lg:grid-cols-[1fr_1.6fr] gap-16 lg:gap-24 items-start">
+    <div
+      style={{
+        opacity: start ? 1 : 0,
+        transform: start ? 'translateY(0)' : 'translateY(24px)',
+        transition: `opacity 0.6s var(--ease-out-expo) ${delay}ms, transform 0.6s var(--ease-out-expo) ${delay}ms`,
+        textAlign: 'center',
+      }}
+    >
+      <div
+        style={{
+          fontFamily: 'var(--font-jetbrains-mono), monospace',
+          fontSize: 'clamp(3.5rem, 8vw, 8rem)',
+          lineHeight: 1,
+          color: '#E8FF00',
+          letterSpacing: '-0.04em',
+          fontWeight: 700,
+        }}
+      >
+        {prefix}{count}{suffix}
+      </div>
+      <p
+        style={{
+          fontFamily: 'var(--font-space-grotesk), system-ui',
+          fontSize: '0.875rem',
+          color: '#666666',
+          marginTop: '1rem',
+          letterSpacing: '0.05em',
+          textTransform: 'uppercase',
+        }}
+      >
+        {label}
+      </p>
+    </div>
+  )
+}
 
-          {/* Left column — editorial text */}
-          <div className="lg:sticky lg:top-32">
-            <SectionLabel className="mb-6">
-              {locale === 'ar' ? 'التشخيص' : 'THE DIAGNOSIS'}
-            </SectionLabel>
-            <h2 className="text-4xl md:text-5xl font-black leading-[1.05] tracking-tight text-[var(--text)] mb-6">
-              <TextReveal delay={0.1} stagger={0.07}>
-                {headline}
-              </TextReveal>
-            </h2>
-            <p className="text-[var(--text-muted)] text-base leading-relaxed max-w-sm">
-              {body}
-            </p>
-          </div>
+export default function ProblemSection({ locale, data }: { locale: string; data?: unknown }) {
+  const isAr = locale === 'ar'
+  const sectionRef = useRef<HTMLElement>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [ref, inView] = useInView(0.3)
 
-          {/* Right column — pain points grid */}
-          <div className="grid sm:grid-cols-1 gap-0 divide-y divide-[var(--border)]">
-            {painPoints.map((p, i) => {
-              const item = locale === 'ar' ? p.ar : p.en
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ delay: i * 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="py-8 flex gap-8 items-start group"
-                >
-                  <span className="text-[var(--text-dim)] text-xs font-semibold tracking-widest mt-1 shrink-0 tabular-nums">
-                    {p.number}
-                  </span>
-                  <div>
-                    <h3 className="text-lg font-bold text-[var(--text)] mb-2 group-hover:text-[var(--prism)] transition-colors duration-200">
-                      {item.title}
-                    </h3>
-                    <p className="text-[var(--text-muted)] text-sm leading-relaxed">
-                      {item.body}
-                    </p>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
+  // Merge both refs
+  const setRef = (el: HTMLElement | null) => {
+    (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+    (ref as React.MutableRefObject<HTMLElement | null>).current = el
+  }
 
+  const stats = isAr
+    ? [
+        { prefix: '', target: 87, suffix: '%', label: 'من الإعلانات يُتجاهلها الجميع', delay: 0 },
+        { prefix: '', target: 4, suffix: '', label: 'ثوانٍ لاستحواذ الانتباه', delay: 200 },
+        { prefix: '$', target: 500, suffix: 'B', label: 'تُهدر سنوياً على إعلانات غير فعّالة', delay: 400 },
+      ]
+    : [
+        { prefix: '', target: 87, suffix: '%', label: 'of ads get ignored', delay: 0 },
+        { prefix: '', target: 4, suffix: '', label: 'seconds to capture attention', delay: 200 },
+        { prefix: '$', target: 500, suffix: 'B', label: 'wasted annually on ineffective advertising', delay: 400 },
+      ]
+
+  const punchline = isAr
+    ? 'كل يوم بدون تسويق عصبي هو يوم تسلّم فيه عملاءك لمنافسيك.'
+    : 'Every day without neuromarketing is a day you hand your customers to competitors.'
+
+  return (
+    <section
+      ref={setRef as React.RefCallback<HTMLElement>}
+      style={{
+        backgroundColor: '#0A0A0A',
+        padding: '12rem 2rem',
+        position: 'relative',
+      }}
+    >
+      {/* Section label */}
+      <div
+        style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: 'var(--font-space-grotesk), system-ui',
+            fontSize: '0.6875rem',
+            letterSpacing: '0.3em',
+            textTransform: 'uppercase',
+            color: '#E8FF00',
+            marginBottom: '5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+          }}
+        >
+          <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+          {isAr ? 'المشكلة' : 'THE PROBLEM'}
+        </p>
+
+        {/* Headline */}
+        <h2
+          style={{
+            fontFamily: 'var(--font-bebas-neue), system-ui',
+            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            color: '#F5F5F5',
+            textAlign: 'center',
+            marginBottom: '6rem',
+            letterSpacing: '0.02em',
+          }}
+        >
+          {isAr ? 'لماذا يتجاهلك الجمهور؟' : 'THEY IGNORE YOU'}
+        </h2>
+
+        {/* Stats grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '3rem',
+            marginBottom: '6rem',
+          }}
+        >
+          {stats.map((stat, i) => (
+            <StatCounter
+              key={i}
+              prefix={stat.prefix}
+              target={stat.target}
+              suffix={stat.suffix}
+              label={stat.label}
+              delay={stat.delay}
+              start={inView}
+            />
+          ))}
         </div>
+
+        {/* Divider */}
+        <div
+          style={{
+            width: inView ? '100%' : '0%',
+            height: '1px',
+            backgroundColor: '#1A1A1A',
+            margin: '0 auto 4rem',
+            transition: 'width 1.2s var(--ease-out-expo) 0.6s',
+          }}
+        />
+
+        {/* Punchline */}
+        <p
+          style={{
+            fontFamily: 'var(--font-bebas-neue), system-ui',
+            fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
+            color: '#F5F5F5',
+            textAlign: 'center',
+            letterSpacing: '0.02em',
+            maxWidth: '800px',
+            margin: '0 auto',
+            opacity: inView ? 1 : 0,
+            transform: inView ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.8s var(--ease-out-expo) 1s, transform 0.8s var(--ease-out-expo) 1s',
+          }}
+        >
+          {punchline}
+        </p>
       </div>
     </section>
   )

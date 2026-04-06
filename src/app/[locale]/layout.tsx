@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Cairo } from 'next/font/google'
+import { Space_Grotesk, Cairo, JetBrains_Mono, Inter, Bebas_Neue } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
@@ -18,6 +18,25 @@ const spaceGrotesk = Space_Grotesk({
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
   variable: '--font-cairo',
+  display: 'swap',
+})
+
+const bebasNeue = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-bebas-neue',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
   display: 'swap',
 })
 
@@ -82,7 +101,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${spaceGrotesk.variable} ${cairo.variable}`}
+      className={`${spaceGrotesk.variable} ${cairo.variable} ${bebasNeue.variable} ${jetbrainsMono.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
       <body className="bg-[var(--bg)] text-[var(--text)] min-h-screen">
