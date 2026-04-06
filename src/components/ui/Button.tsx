@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
-type Variant = 'primary' | 'outline' | 'ghost'
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost'
 type Size = 'sm' | 'md' | 'lg'
 
 interface ButtonProps {
@@ -15,18 +15,24 @@ interface ButtonProps {
 }
 
 const sizeClasses: Record<Size, string> = {
-  sm: 'px-4 py-2 text-sm',
-  md: 'px-6 py-3 text-base',
-  lg: 'px-8 py-4 text-lg',
+  sm: 'px-6 py-2.5 text-sm',
+  md: 'px-8 py-3.5 text-sm',
+  lg: 'px-10 py-4 text-base',
 }
 
 const variantClasses: Record<Variant, string> = {
-  primary:
-    'bg-[var(--accent)] text-[var(--bg)] font-semibold hover:bg-[var(--accent-hover)] transition-colors duration-200',
   outline:
-    'border border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--bg)] transition-colors duration-200',
+    'bg-transparent border border-[#333333] text-[var(--text)] uppercase tracking-wider font-[family-name:var(--font-clash)] font-semibold ' +
+    'hover:border-[var(--text)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-[var(--duration-normal)]',
+  primary:
+    'bg-[var(--prism)] text-[var(--bg)] uppercase tracking-wider font-[family-name:var(--font-clash)] font-semibold ' +
+    'hover:bg-[var(--bg)] hover:text-[var(--prism)] hover:scale-[1.02] border border-[var(--prism)] ' +
+    'active:scale-[0.98] transition-all duration-[var(--duration-normal)]',
+  secondary:
+    'bg-transparent border border-[#333333] text-[var(--text)] uppercase tracking-wider font-[family-name:var(--font-clash)] font-semibold ' +
+    'hover:border-[var(--text)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-[var(--duration-normal)]',
   ghost:
-    'text-[var(--text)] hover:underline transition-all duration-200',
+    'bg-transparent text-[var(--text-muted)] hover:text-[var(--text)] transition-colors duration-[var(--duration-normal)]',
 }
 
 export default function Button({
@@ -38,7 +44,7 @@ export default function Button({
   className = '',
   type = 'button',
 }: ButtonProps) {
-  const classes = `inline-flex items-center justify-center rounded-sm font-medium ${sizeClasses[size]} ${variantClasses[variant]} ${className}`
+  const classes = `inline-flex items-center justify-center rounded-none ${sizeClasses[size]} ${variantClasses[variant]} ${className}`
 
   if (href) {
     return (

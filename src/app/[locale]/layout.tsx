@@ -1,23 +1,36 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Cairo } from 'next/font/google'
+import { Space_Grotesk, Cairo, Inter, JetBrains_Mono } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import ThemeProvider from '@/components/providers/ThemeProvider'
+import GrainOverlay from '@/components/effects/GrainOverlay'
+import CursorFollower from '@/components/ui/CursorFollower'
 import '../globals.css'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  variable: '--font-space-grotesk-var',
   display: 'swap',
 })
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
-  variable: '--font-cairo',
+  variable: '--font-cairo-var',
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter-var',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-var',
   display: 'swap',
 })
 
@@ -53,7 +66,7 @@ export async function generateMetadata({
       },
     },
     other: {
-      'color-scheme': 'light dark',
+      'color-scheme': 'dark',
       'format-detection': 'telephone=no',
     },
   }
@@ -82,17 +95,23 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${spaceGrotesk.variable} ${cairo.variable}`}
+      className={`${spaceGrotesk.variable} ${cairo.variable} ${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-[var(--bg)] text-[var(--text)] min-h-screen">
-        <ThemeProvider>
-          <NextIntlClientProvider messages={messages}>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </NextIntlClientProvider>
-        </ThemeProvider>
+      <head>
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=clash-display@400,600,700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="bg-[#0A0A0A] text-[#F5F5F5] min-h-screen">
+        <NextIntlClientProvider messages={messages}>
+          <GrainOverlay />
+          <CursorFollower />
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </NextIntlClientProvider>
       </body>
     </html>
   )
