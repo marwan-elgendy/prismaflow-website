@@ -27,15 +27,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Column 1: Logo + tagline + social */}
         <div>
-          <Link
-            href={`/${locale}`}
-            className="inline-block text-[var(--text)] font-[family-name:var(--font-clash)] font-bold text-xl tracking-tight leading-none mb-3 hover:opacity-80 transition-opacity"
-          >
-            PRISMA<span className="text-[var(--prism)]">FLOW</span>
+          <Link href={`/${locale}`} className="inline-block mb-6 hover:opacity-80 transition-opacity">
+            <img
+              src="/logo-banner.jpg"
+              alt="PrismaFlow"
+              className="h-10 w-auto object-contain"
+            />
           </Link>
-          <p className="text-[var(--text-muted)] text-[10px] tracking-[0.25em] uppercase font-[family-name:var(--font-space-grotesk)] mb-8">
-            {t('tagline')}
-          </p>
           <div className="flex gap-4">
             <a
               href="#"
