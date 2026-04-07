@@ -29,7 +29,7 @@ export default function Footer() {
         <div>
           <Link href={`/${locale}`} className="inline-block mb-6 hover:opacity-80 transition-opacity">
             <img
-              src="/logo-banner.jpg"
+              src="/logo-banner-transparent.png"
               alt="PrismaFlow"
               className="h-10 w-auto object-contain"
             />

@@ -43,9 +43,9 @@ export default function Navbar() {
         {/* Wordmark — transparent navbar, logo sits on hero bg */}
         <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-opacity z-50 relative">
           <img
-            src="/logo.png"
+            src="/logo-transparent.png"
             alt="PrismaFlow"
-            className="h-9 w-auto object-contain mix-blend-mode:screen"
+            className="h-9 w-auto object-contain"
           />
         </Link>
 
