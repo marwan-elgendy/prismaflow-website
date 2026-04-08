@@ -1,6 +1,10 @@
 'use client'
-import { useRef, useEffect, useState } from 'react'
-import { useInView } from 'framer-motion'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface StatCounterProps {
   value: number
@@ -9,35 +13,38 @@ interface StatCounterProps {
 }
 
 export default function StatCounter({ value, label, suffix = '' }: StatCounterProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
-  const [count, setCount] = useState(0)
-  const [hasStarted, setHasStarted] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const numRef = useRef<HTMLSpanElement>(null)
 
-  useEffect(() => {
-    if (!inView || hasStarted) return
-    setHasStarted(true)
+  useGSAP(() => {
+    const container = containerRef.current
+    const numEl = numRef.current
+    if (!container || !numEl) return
 
-    const duration = 1800
-    const steps = 60
-    const increment = value / steps
-    let current = 0
-    let frame = 0
-
-    const tick = () => {
-      frame++
-      current = Math.min(value, Math.floor((value * frame) / steps))
-      setCount(current)
-      if (current < value) {
-        setTimeout(tick, duration / steps)
-      }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      numEl.textContent = String(value)
+      return
     }
 
-    tick()
-  }, [inView, hasStarted, value])
+    const counter = { val: 0 }
+
+    gsap.to(counter, {
+      val: value,
+      duration: 1.8,
+      ease: 'expo.out',
+      onUpdate: () => {
+        numEl.textContent = String(Math.floor(counter.val))
+      },
+      scrollTrigger: {
+        trigger: container,
+        start: 'top 80%',
+        once: true,
+      },
+    })
+  }, { scope: containerRef })
 
   return (
-    <div ref={ref} className="flex flex-col items-center gap-3">
+    <div ref={containerRef} className="flex flex-col items-center gap-3">
       <div
         className="text-[#00A3CC] leading-none tabular-nums"
         style={{
@@ -45,7 +52,7 @@ export default function StatCounter({ value, label, suffix = '' }: StatCounterPr
           fontSize: 'clamp(4rem, 8vw, 8rem)',
         }}
       >
-        {count}
+        <span ref={numRef}>0</span>
         {suffix}
       </div>
       <div

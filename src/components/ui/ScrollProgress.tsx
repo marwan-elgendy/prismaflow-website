@@ -1,25 +1,33 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function ScrollProgress() {
   const barRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useGSAP(() => {
     const bar = barRef.current
     if (!bar) return
 
-    let rafId: number
-
-    const update = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      bar.style.width = `${progress}%`
-      rafId = requestAnimationFrame(update)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      bar.style.width = '0%'
+      return
     }
 
-    rafId = requestAnimationFrame(update)
-    return () => cancelAnimationFrame(rafId)
+    gsap.to(bar, {
+      width: '100%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: document.documentElement,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.1,
+      },
+    })
   }, [])
 
   return (
@@ -30,7 +38,7 @@ export default function ScrollProgress() {
         top: 0,
         left: 0,
         right: 0,
-        height: '2px',
+        height: '3px',
         background: 'transparent',
         zIndex: 9999,
         pointerEvents: 'none',
@@ -42,7 +50,6 @@ export default function ScrollProgress() {
           height: '100%',
           width: '0%',
           background: '#00A3CC',
-          transition: 'width 0.05s linear',
         }}
       />
     </div>

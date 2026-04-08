@@ -1,5 +1,12 @@
+'use client'
 import Link from 'next/link'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { formatDate } from '@/lib/utils'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Post {
   title: { en?: string; ar?: string }
@@ -21,10 +28,62 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
   const excerpt = (isAr ? post.excerpt?.ar : post.excerpt?.en) || ''
   const date = post.publishedAt ? formatDate(post.publishedAt, locale) : ''
   const category = post.categories?.[0] || ''
+  const cardRef = useRef<HTMLElement>(null)
+
+  useGSAP(() => {
+    if (!cardRef.current) return
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(cardRef.current, { opacity: 1, y: 0 })
+      return
+    }
+
+    gsap.from(cardRef.current, {
+      y: 30,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: cardRef.current,
+        start: 'top 90%',
+        once: true,
+      },
+    })
+  }, { scope: cardRef })
+
+  const handleMouseEnter = () => {
+    if (!cardRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.to(cardRef.current, {
+      scale: 1.02,
+      boxShadow: '0 0 20px rgba(0, 163, 204, 0.12)',
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+  }
+
+  const handleMouseLeave = () => {
+    if (!cardRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.to(cardRef.current, {
+      scale: 1,
+      boxShadow: 'none',
+      duration: 0.3,
+      ease: 'power2.out',
+    })
+  }
 
   return (
-    <Link href={`/${locale}/blog/${post.slug}`} className="group block">
-      <article className="p-6 border border-[#1A1A1A] bg-transparent transition-all duration-300 group-hover:border-[#00A3CC] group-hover:-translate-y-1 flex flex-col gap-3">
+    <Link
+      href={`/${locale}/blog/${post.slug}`}
+      className="group block"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <article
+        ref={cardRef}
+        className="p-6 border border-[#1A1A1A] bg-transparent transition-colors duration-300 group-hover:border-[#00A3CC] flex flex-col gap-3"
+      >
         {/* Category */}
         {category && (
           <span

@@ -283,15 +283,10 @@ body::after {
   to   { width: 100%; }
 }
 
-/* ─── Scroll Reveal ─────────────────────────────────────── */
+/* ─── Scroll Reveal (GSAP handles animation) ──────────────── */
 .sr-reveal {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-.sr-reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* ─── Nav link hover underline (scaleX) ─────────────────── */

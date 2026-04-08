@@ -1,5 +1,7 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
 
 interface Testimonial {
   quote: { en: string; ar: string }
@@ -38,24 +40,64 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
   const isAr = locale === 'ar'
   const [current, setCurrent] = useState(0)
   const [hovered, setHovered] = useState(false)
-  // Key that resets the progress bar CSS animation on each slide change
-  const [progressKey, setProgressKey] = useState(0)
+  const progressBarRef = useRef<HTMLSpanElement>(null)
+  const dotRefs = useRef<(HTMLButtonElement | null)[]>([])
+  const progressAnimRef = useRef<gsap.core.Tween | null>(null)
 
+  // Auto-advance
   useEffect(() => {
     if (hovered) return
     const interval = setInterval(() => {
       setCurrent(prev => (prev + 1) % testimonials.length)
-      setProgressKey(k => k + 1)
     }, 4000)
     return () => clearInterval(interval)
   }, [hovered])
 
+  // Progress bar animation via GSAP
+  useEffect(() => {
+    if (!progressBarRef.current) return
+
+    // Kill previous animation
+    if (progressAnimRef.current) {
+      progressAnimRef.current.kill()
+      progressAnimRef.current = null
+    }
+
+    if (hovered) {
+      // Leave bar at current position (paused)
+      return
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      progressBarRef.current.style.width = '100%'
+      return
+    }
+
+    // Reset and animate
+    gsap.set(progressBarRef.current, { width: '0%' })
+    progressAnimRef.current = gsap.to(progressBarRef.current, {
+      width: '100%',
+      duration: 4,
+      ease: 'none',
+    })
+  }, [current, hovered])
+
+  // Dot scale animation on current change
+  useGSAP(() => {
+    dotRefs.current.forEach((dot, i) => {
+      if (!dot) return
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+      if (i === current) {
+        gsap.to(dot, { scaleX: 3, duration: 0.3, ease: 'power2.out' })
+      } else {
+        gsap.to(dot, { scaleX: 1, duration: 0.3, ease: 'power2.out' })
+      }
+    })
+  }, [current])
+
   const handleDotClick = (idx: number) => {
     setCurrent(idx)
-    setProgressKey(k => k + 1)
   }
-
-  const t = testimonials[current]
 
   return (
     <section
@@ -74,7 +116,8 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
           position: 'absolute',
           inset: 0,
           opacity: 0.015,
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E")',
           backgroundSize: '256px 256px',
           pointerEvents: 'none',
         }}
@@ -179,34 +222,36 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
           {testimonials.map((_, idx) => (
             <div key={idx} style={{ position: 'relative' }}>
               <button
+                ref={el => { dotRefs.current[idx] = el }}
                 onClick={() => handleDotClick(idx)}
                 aria-label={`Testimonial ${idx + 1}`}
                 style={{
-                  width: idx === current ? '24px' : '8px',
+                  width: '24px',
                   height: '8px',
                   backgroundColor: idx === current ? '#00A3CC' : '#2A2A2A',
                   border: 'none',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   padding: 0,
-                  transition: 'width 0.3s ease, background-color 0.3s ease',
                   display: 'block',
                   overflow: 'hidden',
                   position: 'relative',
+                  transformOrigin: 'left center',
+                  transition: 'background-color 0.3s ease',
                 }}
               >
                 {/* Progress line inside active dot */}
                 {idx === current && (
                   <span
-                    key={progressKey}
-                    className="testimonial-progress"
+                    ref={progressBarRef}
                     style={{
                       display: 'block',
                       position: 'absolute',
                       top: 0,
                       left: 0,
                       height: '100%',
-                      animationPlayState: hovered ? 'paused' : 'running',
+                      width: '0%',
+                      background: 'rgba(255,255,255,0.4)',
                     }}
                   />
                 )}

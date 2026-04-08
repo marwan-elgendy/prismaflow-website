@@ -1,6 +1,8 @@
 'use client'
-import { useEffect, useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
 import { useMagneticEffect } from '@/hooks/useMagneticEffect'
 
 const EN_HEADLINE = 'ENGINEER DESIRE.'
@@ -21,33 +23,158 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
   const headline = isAr ? AR_HEADLINE : EN_HEADLINE
   const sublineTarget = isAr ? AR_SUBLINE : EN_SUBLINE
 
-  const [visibleChars, setVisibleChars] = useState(0)
   const [showContent, setShowContent] = useState(false)
   const [scrambledSubline, setScrambledSubline] = useState(sublineTarget)
   const scrambleRafRef = useRef<number>(0)
   const primaryCtaRef = useMagneticEffect<HTMLAnchorElement>(80, 5)
 
-  // Headline char-by-char reveal
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      let i = 0
-      const interval = setInterval(() => {
-        i++
-        setVisibleChars(i)
-        if (i >= headline.length) {
-          clearInterval(interval)
-          setShowContent(true)
-        }
-      }, 25)
-      return () => clearInterval(interval)
-    }, 200)
-    return () => clearTimeout(delay)
-  }, [headline.length])
+  const containerRef = useRef<HTMLElement>(null)
+  const headlineRef = useRef<HTMLHeadingElement>(null)
+  const sublineRef = useRef<HTMLParagraphElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null)
+  const prismSvgRef = useRef<SVGSVGElement>(null)
+  const glowRef = useRef<HTMLDivElement>(null)
+  const floatRef1 = useRef<HTMLDivElement>(null)
+  const floatRef2 = useRef<HTMLDivElement>(null)
+  const floatRef3 = useRef<HTMLDivElement>(null)
+  const floatRef4 = useRef<HTMLDivElement>(null)
+  const scrollArrowRef = useRef<SVGSVGElement>(null)
+
+  useGSAP(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Show everything immediately
+      if (headlineRef.current) {
+        headlineRef.current.querySelectorAll('span').forEach((s) => {
+          ;(s as HTMLElement).style.opacity = '1'
+        })
+      }
+      if (sublineRef.current) {
+        sublineRef.current.style.opacity = '1'
+        sublineRef.current.style.transform = 'none'
+      }
+      if (ctaRef.current) {
+        ctaRef.current.style.opacity = '1'
+        ctaRef.current.style.transform = 'none'
+      }
+      if (scrollIndicatorRef.current) {
+        scrollIndicatorRef.current.style.opacity = '1'
+      }
+      setShowContent(true)
+      return
+    }
+
+    const tl = gsap.timeline()
+
+    // 1. Stagger chars
+    const chars = headlineRef.current?.querySelectorAll('span')
+    if (chars && chars.length > 0) {
+      tl.to(
+        chars,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          stagger: 0.06,
+          ease: 'power2.out',
+        },
+        0.2
+      )
+    }
+
+    // 2. Subline
+    tl.to(
+      sublineRef.current,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      },
+      '>-0.1'
+    )
+
+    // 3. CTAs
+    tl.to(
+      ctaRef.current,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power3.out',
+      },
+      '>-0.5'
+    )
+
+    // 4. Scroll indicator
+    tl.to(
+      scrollIndicatorRef.current,
+      {
+        opacity: 1,
+        duration: 0.6,
+        ease: 'power2.out',
+      },
+      '>-0.3'
+    )
+
+    // 5. On complete, trigger scramble
+    tl.call(() => {
+      setShowContent(true)
+    })
+
+    // Prism SVG spin
+    if (prismSvgRef.current) {
+      gsap.set(prismSvgRef.current, { transformOrigin: '50% 50%' })
+      gsap.to(prismSvgRef.current, {
+        rotation: 360,
+        duration: 20,
+        ease: 'none',
+        repeat: -1,
+      })
+    }
+
+    // Background glow pulse
+    if (glowRef.current) {
+      gsap.to(glowRef.current, {
+        opacity: 0.06,
+        duration: 4,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        startAt: { opacity: 0.01 },
+      })
+    }
+
+    // Scroll arrow bounce
+    if (scrollArrowRef.current) {
+      gsap.to(scrollArrowRef.current, {
+        y: -8,
+        duration: 1.5,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      })
+    }
+
+    // Floating shapes
+    if (floatRef1.current) {
+      gsap.to(floatRef1.current, { y: -20, duration: 6, ease: 'sine.inOut', yoyo: true, repeat: -1 })
+    }
+    if (floatRef2.current) {
+      gsap.to(floatRef2.current, { y: -20, duration: 8, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1 })
+    }
+    if (floatRef3.current) {
+      gsap.to(floatRef3.current, { y: -20, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2 })
+    }
+    if (floatRef4.current) {
+      gsap.to(floatRef4.current, { y: -20, duration: 9, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 3 })
+    }
+  }, { scope: containerRef })
 
   // Text scramble on subline when showContent becomes true
-  useEffect(() => {
-    if (!showContent) return
-    // Respect reduced motion
+  const runScramble = (show: boolean) => {
+    if (!show) return
+    if (typeof window === 'undefined') return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     let iteration = 0
@@ -61,11 +188,14 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
       }
       lastTime = timestamp
 
-      const result = text.split('').map((char, idx) => {
-        if (char === ' ' || char === '—') return char
-        if (idx < iteration) return char
-        return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
-      }).join('')
+      const result = text
+        .split('')
+        .map((char, idx) => {
+          if (char === ' ' || char === '—') return char
+          if (idx < iteration) return char
+          return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+        })
+        .join('')
 
       setScrambledSubline(result)
 
@@ -77,7 +207,6 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
       }
     }
 
-    // Small delay so subline fade-in starts first
     const timeout = setTimeout(() => {
       scrambleRafRef.current = requestAnimationFrame(scramble)
     }, 100)
@@ -86,6 +215,12 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
       clearTimeout(timeout)
       cancelAnimationFrame(scrambleRafRef.current)
     }
+  }
+
+  // Run scramble when showContent becomes true
+  useEffect(() => {
+    if (!showContent) return
+    return runScramble(true) ?? undefined
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showContent])
 
@@ -94,6 +229,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
 
   return (
     <section
+      ref={containerRef}
       style={{
         minHeight: '100vh',
         backgroundColor: '#0A0A0A',
@@ -104,73 +240,80 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
         overflow: 'hidden',
       }}
     >
-      {/* Radial gradient */}
+      {/* Radial gradient glow */}
       <div
+        ref={glowRef}
         aria-hidden="true"
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(232,255,0,0.02) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,163,204,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
+          opacity: 0.01,
         }}
       />
 
       {/* Floating ambient elements */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         {/* Circle 1 */}
-        <div style={{
-          position: 'absolute',
-          top: '15%',
-          left: isAr ? 'auto' : '8%',
-          right: isAr ? '8%' : 'auto',
-          width: '48px',
-          height: '48px',
-          border: '1px solid #00A3CC',
-          borderRadius: '50%',
-          opacity: 0.12,
-          animation: 'pf-float-1 6s ease-in-out infinite',
-        }} />
+        <div
+          ref={floatRef1}
+          style={{
+            position: 'absolute',
+            top: '15%',
+            left: isAr ? 'auto' : '8%',
+            right: isAr ? '8%' : 'auto',
+            width: '48px',
+            height: '48px',
+            border: '1px solid #00A3CC',
+            borderRadius: '50%',
+            opacity: 0.12,
+          }}
+        />
         {/* Square */}
-        <div style={{
-          position: 'absolute',
-          top: '65%',
-          left: isAr ? 'auto' : '12%',
-          right: isAr ? '12%' : 'auto',
-          width: '20px',
-          height: '20px',
-          background: '#00A3CC',
-          opacity: 0.1,
-          animation: 'pf-float-2 8s ease-in-out infinite',
-          animationDelay: '1s',
-        }} />
+        <div
+          ref={floatRef2}
+          style={{
+            position: 'absolute',
+            top: '65%',
+            left: isAr ? 'auto' : '12%',
+            right: isAr ? '12%' : 'auto',
+            width: '20px',
+            height: '20px',
+            background: '#00A3CC',
+            opacity: 0.1,
+          }}
+        />
         {/* Circle 2 */}
-        <div style={{
-          position: 'absolute',
-          top: '35%',
-          left: isAr ? '18%' : 'auto',
-          right: isAr ? 'auto' : '20%',
-          width: '12px',
-          height: '12px',
-          background: '#00A3CC',
-          borderRadius: '50%',
-          opacity: 0.15,
-          animation: 'pf-float-3 7s ease-in-out infinite',
-          animationDelay: '2s',
-        }} />
+        <div
+          ref={floatRef3}
+          style={{
+            position: 'absolute',
+            top: '35%',
+            left: isAr ? '18%' : 'auto',
+            right: isAr ? 'auto' : '20%',
+            width: '12px',
+            height: '12px',
+            background: '#00A3CC',
+            borderRadius: '50%',
+            opacity: 0.15,
+          }}
+        />
         {/* Diamond */}
-        <div style={{
-          position: 'absolute',
-          bottom: '25%',
-          left: isAr ? '5%' : 'auto',
-          right: isAr ? 'auto' : '8%',
-          width: '14px',
-          height: '14px',
-          border: '1px solid #00A3CC',
-          opacity: 0.12,
-          transform: 'rotate(45deg)',
-          animation: 'pf-float-1 9s ease-in-out infinite',
-          animationDelay: '3s',
-        }} />
+        <div
+          ref={floatRef4}
+          style={{
+            position: 'absolute',
+            bottom: '25%',
+            left: isAr ? '5%' : 'auto',
+            right: isAr ? 'auto' : '8%',
+            width: '14px',
+            height: '14px',
+            border: '1px solid #00A3CC',
+            opacity: 0.12,
+            transform: 'rotate(45deg)',
+          }}
+        />
       </div>
 
       {/* Prism SVG decoration */}
@@ -187,11 +330,11 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
         }}
       >
         <svg
+          ref={prismSvgRef}
           width="640"
           height="640"
           viewBox="0 0 640 640"
           fill="none"
-          style={{ animation: 'pf-prism-spin 20s linear infinite' }}
         >
           <polygon points="320,20 610,520 30,520" stroke="#00A3CC" strokeWidth="1.5" fill="none" />
           <polygon points="320,80 550,490 90,490" stroke="#00A3CC" strokeWidth="0.8" fill="none" />
@@ -217,6 +360,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
       >
         {/* Headline */}
         <h1
+          ref={headlineRef}
           aria-label={headline}
           style={{
             fontFamily: 'var(--font-bebas-neue), system-ui',
@@ -232,9 +376,9 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
             <span
               key={idx}
               style={{
-                opacity: idx < visibleChars ? 1 : 0,
-                transition: 'opacity 0.05s ease',
-                display: 'inline',
+                opacity: 0,
+                display: 'inline-block',
+                transform: 'translateY(10px)',
               }}
             >
               {char === ' ' ? '\u00A0' : char}
@@ -244,6 +388,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
 
         {/* Subline with scramble effect */}
         <p
+          ref={sublineRef}
           style={{
             fontFamily: 'var(--font-space-grotesk), system-ui',
             fontSize: '1.5rem',
@@ -251,9 +396,8 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
             marginBottom: '3rem',
             maxWidth: '640px',
             lineHeight: 1.5,
-            opacity: showContent ? 1 : 0,
-            transform: showContent ? 'translateY(0)' : 'translateY(12px)',
-            transition: 'opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo)',
+            opacity: 0,
+            transform: 'translateY(12px)',
             fontVariantNumeric: 'tabular-nums',
           }}
         >
@@ -262,13 +406,13 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
 
         {/* CTAs */}
         <div
+          ref={ctaRef}
           style={{
             display: 'flex',
             gap: '1rem',
             flexWrap: 'wrap',
-            opacity: showContent ? 1 : 0,
-            transform: showContent ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 0.8s var(--ease-out-expo) 0.15s, transform 0.8s var(--ease-out-expo) 0.15s',
+            opacity: 0,
+            transform: 'translateY(16px)',
           }}
         >
           <Link
@@ -324,6 +468,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
 
       {/* Scroll indicator */}
       <div
+        ref={scrollIndicatorRef}
         aria-hidden="true"
         style={{
           position: 'absolute',
@@ -334,8 +479,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           flexDirection: 'column',
           alignItems: 'center',
           gap: '0.5rem',
-          opacity: showContent ? 1 : 0,
-          transition: 'opacity 1s ease 0.5s',
+          opacity: 0,
         }}
       >
         <span
@@ -357,11 +501,11 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           }}
         />
         <svg
+          ref={scrollArrowRef}
           width="14"
           height="9"
           viewBox="0 0 14 9"
           fill="none"
-          style={{ animation: 'pf-bounce 2s ease-in-out infinite' }}
         >
           <path d="M1 1L7 7L13 1" stroke="#00A3CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

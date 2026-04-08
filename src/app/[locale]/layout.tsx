@@ -9,6 +9,7 @@ import Footer from '@/components/layout/Footer'
 import GrainOverlay from '@/components/effects/GrainOverlay'
 import CursorFollower from '@/components/ui/CursorFollower'
 import ScrollProgress from '@/components/ui/ScrollProgress'
+import GSAPScrollReveal from '@/components/ui/GSAPScrollReveal'
 import '../globals.css'
 
 const spaceGrotesk = Space_Grotesk({
@@ -115,6 +116,7 @@ export default async function LocaleLayout({
       <body className="bg-[#0A0A0A] text-[#F5F5F5] min-h-screen">
         <NextIntlClientProvider messages={messages}>
           <ScrollProgress />
+          <GSAPScrollReveal />
           <GrainOverlay />
           <CursorFollower />
           <Navbar />

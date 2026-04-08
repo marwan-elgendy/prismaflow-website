@@ -1,9 +1,11 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
 import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Navbar() {
@@ -13,6 +15,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
+  const logoRef = useRef<HTMLAnchorElement>(null)
+  const navLinksRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLAnchorElement>(null)
+
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handler, { passive: true })
@@ -21,8 +27,45 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [open])
+
+  useGSAP(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    // Logo entrance
+    gsap.from(logoRef.current, {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.out',
+      delay: 0.1,
+    })
+
+    // Nav links stagger
+    if (navLinksRef.current) {
+      const links = navLinksRef.current.querySelectorAll('a')
+      gsap.from(links, {
+        y: -10,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.out',
+        stagger: 0.1,
+        delay: 0.2,
+      })
+    }
+
+    // CTA button
+    gsap.from(ctaRef.current, {
+      x: 20,
+      opacity: 0,
+      duration: 0.4,
+      ease: 'power2.out',
+      delay: 0.4,
+    })
+  }, [])
 
   const links = [
     { href: `/${locale}`, label: t('home') },
@@ -40,8 +83,12 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-        {/* Wordmark — transparent navbar, logo sits on hero bg */}
-        <Link href={`/${locale}`} className="flex items-center hover:opacity-80 transition-opacity z-50 relative">
+        {/* Wordmark */}
+        <Link
+          ref={logoRef}
+          href={`/${locale}`}
+          className="flex items-center hover:opacity-80 transition-opacity z-50 relative"
+        >
           <img
             src="/logo-transparent.png"
             alt="PrismaFlow"
@@ -50,7 +97,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div ref={navLinksRef} className="hidden md:flex items-center gap-8">
           {links.map((l) => {
             const isActive = pathname === l.href
             return (
@@ -76,6 +123,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher />
           <Link
+            ref={ctaRef}
             href={`/${locale}/apply`}
             className="px-5 py-2.5 text-xs tracking-wider uppercase font-[family-name:var(--font-clash)] font-semibold bg-[var(--prism)] text-[var(--bg)] hover:bg-[var(--bg)] hover:text-[var(--prism)] border border-[var(--prism)] transition-all duration-[var(--duration-normal)] hover:scale-[1.02] active:scale-[0.98]"
           >

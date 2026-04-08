@@ -1,68 +1,14 @@
 'use client'
 import { useRef } from 'react'
-import { useInView } from '@/hooks/useInView'
-import { useCounter } from '@/hooks/useCounter'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-interface StatProps {
-  prefix?: string
-  target: number
-  suffix?: string
-  label: string
-  delay: number
-  start: boolean
-}
-
-function StatCounter({ prefix = '', target, suffix = '', label, delay, start }: StatProps) {
-  const count = useCounter(target, 1500, start)
-
-  return (
-    <div
-      style={{
-        opacity: start ? 1 : 0,
-        transform: start ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 0.6s var(--ease-out-expo) ${delay}ms, transform 0.6s var(--ease-out-expo) ${delay}ms`,
-        textAlign: 'center',
-      }}
-    >
-      <div
-        style={{
-          fontFamily: 'var(--font-jetbrains-mono), monospace',
-          fontSize: 'clamp(3.5rem, 8vw, 8rem)',
-          lineHeight: 1,
-          color: '#00A3CC',
-          letterSpacing: '-0.04em',
-          fontWeight: 700,
-        }}
-      >
-        {prefix}{count}{suffix}
-      </div>
-      <p
-        style={{
-          fontFamily: 'var(--font-space-grotesk), system-ui',
-          fontSize: '0.875rem',
-          color: '#666666',
-          marginTop: '1rem',
-          letterSpacing: '0.05em',
-          textTransform: 'uppercase',
-        }}
-      >
-        {label}
-      </p>
-    </div>
-  )
-}
+gsap.registerPlugin(ScrollTrigger)
 
 export default function ProblemSection({ locale, data }: { locale: string; data?: unknown }) {
   const isAr = locale === 'ar'
   const sectionRef = useRef<HTMLElement>(null)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [ref, inView] = useInView(0.3)
-
-  // Merge both refs
-  const setRef = (el: HTMLElement | null) => {
-    (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
-    (ref as React.MutableRefObject<HTMLElement | null>).current = el
-  }
 
   const stats = isAr
     ? [
@@ -80,16 +26,106 @@ export default function ProblemSection({ locale, data }: { locale: string; data?
     ? 'كل يوم بدون تسويق عصبي هو يوم تسلّم فيه عملاءك لمنافسيك.'
     : 'Every day without neuromarketing is a day you hand your customers to competitors.'
 
+  useGSAP(() => {
+    if (!sectionRef.current) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reducedMotion) {
+      // Show all immediately
+      gsap.set('.problem-label', { opacity: 1, x: 0 })
+      gsap.set('.problem-headline', { opacity: 1, y: 0 })
+      gsap.set('.problem-stat-item', { opacity: 1, y: 0 })
+      gsap.set('.problem-divider', { width: '100%' })
+      gsap.set('.problem-punchline', { opacity: 1, y: 0 })
+      stats.forEach((stat, i) => {
+        const el = sectionRef.current?.querySelector(`.stat-num-${i}`)
+        if (el) el.textContent = String(stat.target)
+      })
+      return
+    }
+
+    const triggerDefaults = {
+      start: 'top 80%',
+      once: true,
+    }
+
+    // Section label
+    gsap.from('.problem-label', {
+      x: -30,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: sectionRef.current, ...triggerDefaults },
+    })
+
+    // Headline
+    gsap.from('.problem-headline', {
+      y: 30,
+      opacity: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1,
+      scrollTrigger: { trigger: sectionRef.current, ...triggerDefaults },
+    })
+
+    // Stat items: fade + slide up, staggered
+    gsap.from('.problem-stat-item', {
+      y: 24,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power3.out',
+      stagger: 0.2,
+      scrollTrigger: { trigger: sectionRef.current, ...triggerDefaults },
+    })
+
+    // Counter roll for each stat
+    stats.forEach((stat, i) => {
+      const el = sectionRef.current?.querySelector(`.stat-num-${i}`) as HTMLElement | null
+      if (!el) return
+
+      const counter = { val: 0 }
+      gsap.to(counter, {
+        val: stat.target,
+        duration: 1.5,
+        ease: 'expo.out',
+        delay: (stat.delay / 1000),
+        onUpdate: () => {
+          el.textContent = String(Math.floor(counter.val))
+        },
+        scrollTrigger: { trigger: sectionRef.current, ...triggerDefaults },
+      })
+    })
+
+    // Divider
+    gsap.from('.problem-divider', {
+      width: '0%',
+      duration: 1.2,
+      ease: 'power3.out',
+      delay: 0.6,
+      scrollTrigger: { trigger: sectionRef.current, ...triggerDefaults },
+    })
+
+    // Punchline
+    gsap.from('.problem-punchline', {
+      y: 24,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 1,
+      scrollTrigger: { trigger: sectionRef.current, ...triggerDefaults },
+    })
+  }, { scope: sectionRef })
+
   return (
     <section
-      ref={setRef as React.RefCallback<HTMLElement>}
+      ref={sectionRef}
       style={{
         backgroundColor: '#0A0A0A',
         padding: '12rem 2rem',
         position: 'relative',
       }}
     >
-      {/* Section label */}
       <div
         style={{
           maxWidth: '1200px',
@@ -97,6 +133,7 @@ export default function ProblemSection({ locale, data }: { locale: string; data?
         }}
       >
         <p
+          className="problem-label"
           style={{
             fontFamily: 'var(--font-space-grotesk), system-ui',
             fontSize: '0.6875rem',
@@ -115,6 +152,7 @@ export default function ProblemSection({ locale, data }: { locale: string; data?
 
         {/* Headline */}
         <h2
+          className="problem-headline"
           style={{
             fontFamily: 'var(--font-bebas-neue), system-ui',
             fontSize: 'clamp(2rem, 5vw, 3rem)',
@@ -137,31 +175,55 @@ export default function ProblemSection({ locale, data }: { locale: string; data?
           }}
         >
           {stats.map((stat, i) => (
-            <StatCounter
+            <div
               key={i}
-              prefix={stat.prefix}
-              target={stat.target}
-              suffix={stat.suffix}
-              label={stat.label}
-              delay={stat.delay}
-              start={inView}
-            />
+              className="problem-stat-item"
+              style={{ textAlign: 'center' }}
+            >
+              <div
+                style={{
+                  fontFamily: 'var(--font-jetbrains-mono), monospace',
+                  fontSize: 'clamp(3.5rem, 8vw, 8rem)',
+                  lineHeight: 1,
+                  color: '#00A3CC',
+                  letterSpacing: '-0.04em',
+                  fontWeight: 700,
+                }}
+              >
+                <span>{stat.prefix}</span>
+                <span className={`stat-num-${i}`}>0</span>
+                <span>{stat.suffix}</span>
+              </div>
+              <p
+                style={{
+                  fontFamily: 'var(--font-space-grotesk), system-ui',
+                  fontSize: '0.875rem',
+                  color: '#666666',
+                  marginTop: '1rem',
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {stat.label}
+              </p>
+            </div>
           ))}
         </div>
 
         {/* Divider */}
         <div
+          className="problem-divider"
           style={{
-            width: inView ? '100%' : '0%',
+            width: '100%',
             height: '1px',
             backgroundColor: '#1A1A1A',
             margin: '0 auto 4rem',
-            transition: 'width 1.2s var(--ease-out-expo) 0.6s',
           }}
         />
 
         {/* Punchline */}
         <p
+          className="problem-punchline"
           style={{
             fontFamily: 'var(--font-bebas-neue), system-ui',
             fontSize: 'clamp(1.5rem, 3.5vw, 2.5rem)',
@@ -170,9 +232,6 @@ export default function ProblemSection({ locale, data }: { locale: string; data?
             letterSpacing: '0.02em',
             maxWidth: '800px',
             margin: '0 auto',
-            opacity: inView ? 1 : 0,
-            transform: inView ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.8s var(--ease-out-expo) 1s, transform 0.8s var(--ease-out-expo) 1s',
           }}
         >
           {punchline}

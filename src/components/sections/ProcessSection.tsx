@@ -1,13 +1,17 @@
 'use client'
 import { useRef } from 'react'
-import { useInView } from '@/hooks/useInView'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const steps = [
   {
     number: '01',
     title: { en: 'Diagnose', ar: 'التشخيص' },
     description: {
-      en: 'We map your market\'s unconscious decision-making patterns using neuroscience research.',
+      en: "We map your market's unconscious decision-making patterns using neuroscience research.",
       ar: 'نرسم خريطة أنماط اتخاذ القرار اللاواعية في سوقك باستخدام أبحاث علم الأعصاب.',
     },
   },
@@ -29,7 +33,13 @@ const steps = [
   },
 ]
 
-function SVGConnector({ inView, isRtl }: { inView: boolean; isRtl: boolean }) {
+function SVGConnector({
+  lineRef,
+  isRtl,
+}: {
+  lineRef: React.RefObject<SVGLineElement | null>
+  isRtl: boolean
+}) {
   return (
     <svg
       aria-hidden="true"
@@ -47,6 +57,7 @@ function SVGConnector({ inView, isRtl }: { inView: boolean; isRtl: boolean }) {
       className="pf-process-line"
     >
       <line
+        ref={lineRef}
         x1={isRtl ? '75%' : '25%'}
         y1="1"
         x2={isRtl ? '25%' : '75%'}
@@ -54,11 +65,8 @@ function SVGConnector({ inView, isRtl }: { inView: boolean; isRtl: boolean }) {
         stroke="#00A3CC"
         strokeWidth="1.5"
         strokeDasharray="2000"
-        strokeDashoffset={inView ? '0' : '2000'}
-        style={{
-          transition: inView ? 'stroke-dashoffset 1.4s var(--ease-out-expo) 0.6s' : 'none',
-          opacity: 0.4,
-        }}
+        strokeDashoffset="2000"
+        style={{ opacity: 0.4 }}
       />
     </svg>
   )
@@ -67,16 +75,108 @@ function SVGConnector({ inView, isRtl }: { inView: boolean; isRtl: boolean }) {
 export default function ProcessSection({ locale, data }: { locale: string; data?: unknown }) {
   const isAr = locale === 'ar'
   const sectionRef = useRef<HTMLElement>(null)
-  const [ref, inView] = useInView(0.3)
+  const lineRef = useRef<SVGLineElement>(null)
 
-  const mergeRef = (el: HTMLElement | null) => {
-    (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
-    (ref as React.MutableRefObject<HTMLElement | null>).current = el
-  }
+  useGSAP(() => {
+    if (!sectionRef.current) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reducedMotion) {
+      gsap.set('.process-label', { opacity: 1, x: 0 })
+      gsap.set('.process-headline', { opacity: 1, y: 0 })
+      gsap.set('.process-step', { opacity: 1, y: 0 })
+      gsap.set('.step-number', { opacity: 1, scale: 1 })
+      gsap.set('.step-dot', { scale: 1 })
+      if (lineRef.current) gsap.set(lineRef.current, { strokeDashoffset: 0 })
+      return
+    }
+
+    const triggerDefaults = {
+      trigger: sectionRef.current,
+      start: 'top 80%',
+      once: true,
+    }
+
+    // Section label
+    gsap.from('.process-label', {
+      x: -30,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: triggerDefaults,
+    })
+
+    // Section headline
+    gsap.from('.process-headline', {
+      y: 30,
+      opacity: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1,
+      scrollTrigger: triggerDefaults,
+    })
+
+    // Steps
+    gsap.from('.process-step', {
+      y: 50,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power3.out',
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        once: true,
+      },
+    })
+
+    // Step numbers
+    gsap.from('.step-number', {
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.out',
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        once: true,
+      },
+    })
+
+    // Step dots
+    gsap.from('.step-dot', {
+      scale: 0,
+      duration: 0.4,
+      ease: 'back.out(1.7)',
+      stagger: 0.2,
+      delay: 0.2,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 70%',
+        once: true,
+      },
+    })
+
+    // SVG connector line
+    if (lineRef.current) {
+      gsap.to(lineRef.current, {
+        strokeDashoffset: 0,
+        duration: 1.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 60%',
+          once: true,
+        },
+      })
+    }
+  }, { scope: sectionRef })
 
   return (
     <section
-      ref={mergeRef as React.RefCallback<HTMLElement>}
+      ref={sectionRef}
       style={{
         backgroundColor: '#0A0A0A',
         padding: '8rem 2rem',
@@ -87,6 +187,7 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
         {/* Header */}
         <div style={{ marginBottom: '6rem' }}>
           <p
+            className="process-label"
             style={{
               fontFamily: 'var(--font-space-grotesk), system-ui',
               fontSize: '0.6875rem',
@@ -103,6 +204,7 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
             {isAr ? 'البروتوكول' : 'THE PROTOCOL'}
           </p>
           <h2
+            className="process-headline"
             style={{
               fontFamily: 'var(--font-bebas-neue), system-ui',
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
@@ -111,14 +213,14 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
               lineHeight: 1,
             }}
           >
-            {isAr ? 'خريطة الطريق إلى عقل المشتري' : 'THE ROADMAP TO THE BUYER\'S MIND'}
+            {isAr ? 'خريطة الطريق إلى عقل المشتري' : "THE ROADMAP TO THE BUYER'S MIND"}
           </h2>
         </div>
 
         {/* Steps */}
         <div style={{ position: 'relative' }}>
           {/* SVG connector line — shown on md+ via inline style override in CSS */}
-          <SVGConnector inView={inView} isRtl={isAr} />
+          <SVGConnector lineRef={lineRef} isRtl={isAr} />
 
           <div
             style={{
@@ -130,16 +232,13 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
             {steps.map((step, i) => (
               <div
                 key={step.number}
-                style={{
-                  paddingTop: '1rem',
-                  opacity: inView ? 1 : 0,
-                  transform: inView ? 'translateY(0)' : 'translateY(40px)',
-                  transition: `opacity 0.6s var(--ease-out-expo) ${i * 0.2}s, transform 0.6s var(--ease-out-expo) ${i * 0.2}s`,
-                }}
+                className="process-step"
+                style={{ paddingTop: '1rem' }}
               >
                 {/* Large muted step number */}
                 <div
                   aria-hidden="true"
+                  className="step-number"
                   style={{
                     fontFamily: 'var(--font-jetbrains-mono), monospace',
                     fontSize: 'clamp(5rem, 10vw, 8rem)',
@@ -154,15 +253,14 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
                   {step.number}
                 </div>
 
-                {/* Chartreuse accent dot */}
+                {/* Cyan accent dot */}
                 <div
+                  className="step-dot"
                   style={{
                     width: '8px',
                     height: '8px',
                     backgroundColor: '#00A3CC',
                     marginBottom: '1.25rem',
-                    transform: inView ? 'scale(1)' : 'scale(0)',
-                    transition: `transform 0.4s var(--ease-out-expo) ${i * 0.2 + 0.3}s`,
                   }}
                 />
 

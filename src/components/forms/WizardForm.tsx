@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import gsap from 'gsap'
 import Button from '@/components/ui/Button'
 
 interface FormData {
@@ -46,12 +47,23 @@ export default function WizardForm({ locale }: { locale: string }) {
     email: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const progressBarRef = useRef<HTMLDivElement>(null)
 
   const step = STEPS[currentStep]
   const progress = Math.round(((currentStep) / STEPS.length) * 100)
   const question = QUESTIONS[step][isAr ? 'ar' : 'en']
   const isLastStep = currentStep === STEPS.length - 1
   const isValid = formData[step]?.trim() !== ''
+
+  // Animate progress bar with GSAP when progress changes
+  useEffect(() => {
+    if (!progressBarRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      progressBarRef.current.style.width = `${progress}%`
+      return
+    }
+    gsap.to(progressBarRef.current, { width: `${progress}%`, duration: 0.4, ease: 'power2.out' })
+  }, [progress])
 
   const handleNext = () => {
     if (!isValid) return
@@ -125,11 +137,10 @@ export default function WizardForm({ locale }: { locale: string }) {
           </span>
         </div>
         <div className="h-px bg-[#1A1A1A] relative">
-          <motion.div
+          <div
+            ref={progressBarRef}
             className="absolute top-0 left-0 h-px bg-[#00A3CC]"
-            initial={{ width: '0%' }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
+            style={{ width: '0%' }}
           />
         </div>
       </div>

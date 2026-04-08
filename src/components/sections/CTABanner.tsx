@@ -1,19 +1,17 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
-import { useInView } from '@/hooks/useInView'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function CTABanner({ locale }: { locale: string }) {
   const isAr = locale === 'ar'
-  const [ref, inView] = useInView(0.3)
   const [btnHovered, setBtnHovered] = useState(false)
+  const sectionRef = useRef<HTMLDivElement>(null)
   const dividerRef = useRef<SVGLineElement>(null)
-  const [dividerAnimated, setDividerAnimated] = useState(false)
-
-  // Trigger divider draw animation when section enters view
-  useEffect(() => {
-    if (inView && !dividerAnimated) setDividerAnimated(true)
-  }, [inView, dividerAnimated])
 
   const headline = isAr ? 'مستعد لتصبح لا يُقاوم؟' : 'Ready to be irresistible?'
   const subline = isAr
@@ -21,8 +19,68 @@ export default function CTABanner({ locale }: { locale: string }) {
     : 'Stop burning your budget. Start engineering desire today.'
   const cta = isAr ? 'قدّم طلبك الآن' : 'Apply Now →'
 
+  useGSAP(() => {
+    if (!sectionRef.current) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reducedMotion) {
+      if (dividerRef.current) gsap.set(dividerRef.current, { strokeDashoffset: 0 })
+      gsap.set('.cta-headline', { opacity: 1, y: 0 })
+      gsap.set('.cta-subline', { opacity: 1, y: 0 })
+      gsap.set('.cta-button-wrap', { opacity: 1, scale: 1 })
+      return
+    }
+
+    const triggerDefaults = {
+      trigger: sectionRef.current,
+      start: 'top 80%',
+      once: true,
+    }
+
+    // SVG divider line
+    if (dividerRef.current) {
+      gsap.set(dividerRef.current, { strokeDashoffset: 1200 })
+      gsap.to(dividerRef.current, {
+        strokeDashoffset: 0,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: triggerDefaults,
+      })
+    }
+
+    // Headline
+    gsap.from('.cta-headline', {
+      opacity: 0,
+      y: 32,
+      duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: triggerDefaults,
+    })
+
+    // Subline
+    gsap.from('.cta-subline', {
+      opacity: 0,
+      y: 24,
+      duration: 0.8,
+      ease: 'power3.out',
+      delay: 0.2,
+      scrollTrigger: triggerDefaults,
+    })
+
+    // Button wrapper
+    gsap.from('.cta-button-wrap', {
+      opacity: 0,
+      scale: 0.95,
+      duration: 0.4,
+      ease: 'power2.out',
+      delay: 0.3,
+      scrollTrigger: triggerDefaults,
+    })
+  }, { scope: sectionRef })
+
   return (
-    <>
+    <div ref={sectionRef}>
       {/* Animated divider — draws left to right on scroll */}
       <div
         aria-hidden="true"
@@ -44,18 +102,12 @@ export default function CTABanner({ locale }: { locale: string }) {
             stroke="#00A3CC"
             strokeWidth="2"
             strokeDasharray="1200"
-            strokeDashoffset={dividerAnimated ? '0' : '1200'}
-            style={{
-              transition: dividerAnimated
-                ? 'stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1)'
-                : 'none',
-            }}
+            strokeDashoffset="1200"
           />
         </svg>
       </div>
 
       <section
-        ref={ref as unknown as React.Ref<HTMLElement>}
         style={{
           backgroundColor: '#00A3CC',
           padding: '8rem 2rem',
@@ -86,6 +138,7 @@ export default function CTABanner({ locale }: { locale: string }) {
         >
           {/* Headline */}
           <h2
+            className="cta-headline"
             style={{
               fontFamily: 'var(--font-bebas-neue), system-ui',
               fontSize: 'clamp(2.5rem, 8vw, 5rem)',
@@ -93,9 +146,6 @@ export default function CTABanner({ locale }: { locale: string }) {
               color: '#0A0A0A',
               letterSpacing: '-0.01em',
               marginBottom: '1.5rem',
-              opacity: inView ? 1 : 0,
-              transform: inView ? 'translateY(0)' : 'translateY(32px)',
-              transition: 'opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo)',
             }}
           >
             {headline}
@@ -103,13 +153,12 @@ export default function CTABanner({ locale }: { locale: string }) {
 
           {/* Subline */}
           <p
+            className="cta-subline"
             style={{
               fontFamily: 'var(--font-space-grotesk), system-ui',
               fontSize: '1.25rem',
               color: '#0A0A0A',
-              opacity: inView ? 0.7 : 0,
-              transform: inView ? 'translateY(0)' : 'translateY(24px)',
-              transition: 'opacity 0.8s var(--ease-out-expo) 0.15s, transform 0.8s var(--ease-out-expo) 0.15s',
+              opacity: 0.7,
               marginBottom: '3rem',
               maxWidth: '520px',
               margin: '0 auto 3rem',
@@ -120,13 +169,7 @@ export default function CTABanner({ locale }: { locale: string }) {
           </p>
 
           {/* Button */}
-          <div
-            style={{
-              opacity: inView ? 1 : 0,
-              transform: inView ? 'translateY(0)' : 'translateY(24px)',
-              transition: 'opacity 0.8s var(--ease-out-expo) 0.3s, transform 0.8s var(--ease-out-expo) 0.3s',
-            }}
-          >
+          <div className="cta-button-wrap">
             <Link
               href={`/${locale}/apply`}
               onMouseEnter={() => setBtnHovered(true)}
@@ -153,6 +196,6 @@ export default function CTABanner({ locale }: { locale: string }) {
           </div>
         </div>
       </section>
-    </>
+    </div>
   )
 }

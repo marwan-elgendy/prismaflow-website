@@ -1,6 +1,10 @@
 'use client'
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface ServiceCardProps {
   number: string
@@ -10,27 +14,71 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ number, title, problem, solution }: ServiceCardProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -10% 0px' })
+  const cardRef = useRef<HTMLDivElement>(null)
+  const borderRef = useRef<HTMLDivElement>(null)
+  const [bgColor, setBgColor] = useState('transparent')
+
+  useGSAP(() => {
+    if (!cardRef.current || !borderRef.current) return
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(borderRef.current, { scaleY: 1 })
+      return
+    }
+
+    gsap.set(borderRef.current, { scaleY: 0, transformOrigin: 'top center' })
+    gsap.to(borderRef.current, {
+      scaleY: 1,
+      duration: 0.5,
+      ease: 'power2.out',
+      delay: 0.1,
+      scrollTrigger: {
+        trigger: cardRef.current,
+        start: 'top 85%',
+        once: true,
+      },
+    })
+  }, { scope: cardRef })
+
+  const handleMouseEnter = () => {
+    setBgColor('#111111')
+    if (!cardRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.to(cardRef.current, {
+      scale: 1.02,
+      rotation: 0.5,
+      duration: 0.3,
+      ease: 'power2.out',
+      boxShadow: '0 0 30px rgba(0, 163, 204, 0.15)',
+    })
+  }
+
+  const handleMouseLeave = () => {
+    setBgColor('transparent')
+    if (!cardRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.to(cardRef.current, {
+      scale: 1,
+      rotation: 0,
+      duration: 0.3,
+      ease: 'power2.out',
+      boxShadow: 'none',
+    })
+  }
 
   return (
-    <motion.div
-      ref={ref}
-      className="relative p-8 border border-[#1A1A1A] bg-transparent"
-      whileHover={{
-        backgroundColor: '#111111',
-        scale: 1.01,
-        rotate: 0.5,
-        boxShadow: '0 0 30px rgba(0, 163, 204, 0.15)',
-      }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+    <div
+      ref={cardRef}
+      className="relative p-8 border border-[#1A1A1A]"
+      style={{ backgroundColor: bgColor, transition: 'background-color 0.3s ease' }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Left border — animates in on scroll */}
-      <motion.div
-        className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#00A3CC] origin-top"
-        initial={{ scaleY: 0 }}
-        animate={{ scaleY: inView ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}
+      <div
+        ref={borderRef}
+        className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#00A3CC]"
+        style={{ transformOrigin: 'top center' }}
       />
 
       {/* Number */}
@@ -67,6 +115,6 @@ export default function ServiceCard({ number, title, problem, solution }: Servic
       >
         {solution}
       </p>
-    </motion.div>
+    </div>
   )
 }

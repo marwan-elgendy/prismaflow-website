@@ -1,6 +1,10 @@
 'use client'
 import { useRef, useState } from 'react'
-import { useInView } from '@/hooks/useInView'
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Service {
   number: string
@@ -66,36 +70,75 @@ interface ServiceCardProps {
 function ServiceCard({ service, locale, index }: ServiceCardProps) {
   const isAr = locale === 'ar'
   const [hovered, setHovered] = useState(false)
-  const cardRef = useRef<HTMLElement>(null)
-  const [ref, inView] = useInView(0.2)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const borderRef = useRef<HTMLDivElement>(null)
 
-  const mergeRef = (el: HTMLElement | null) => {
-    (cardRef as React.MutableRefObject<HTMLElement | null>).current = el;
-    (ref as React.MutableRefObject<HTMLElement | null>).current = el
+  useGSAP(() => {
+    if (!cardRef.current || !borderRef.current) return
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(borderRef.current, { scaleY: 1 })
+      return
+    }
+
+    // Left border draw on scroll
+    gsap.set(borderRef.current, { scaleY: 0, transformOrigin: 'top center' })
+    gsap.to(borderRef.current, {
+      scaleY: 1,
+      duration: 0.4,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: cardRef.current,
+        start: 'top 85%',
+        once: true,
+      },
+    })
+  }, { scope: cardRef })
+
+  const handleMouseEnter = () => {
+    setHovered(true)
+    if (!cardRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.to(cardRef.current, {
+      scale: 1.02,
+      rotation: 0.5,
+      duration: 0.3,
+      ease: 'power2.out',
+      boxShadow: '0 0 30px rgba(0, 163, 204, 0.12)',
+    })
+  }
+
+  const handleMouseLeave = () => {
+    setHovered(false)
+    if (!cardRef.current) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.to(cardRef.current, {
+      scale: 1,
+      rotation: 0,
+      duration: 0.3,
+      ease: 'power2.out',
+      boxShadow: 'none',
+    })
   }
 
   return (
     <div
-      ref={mergeRef as React.RefCallback<HTMLDivElement>}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      ref={cardRef}
+      className="service-card"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       style={{
         position: 'relative',
         border: '1px solid #1A1A1A',
         backgroundColor: hovered ? '#111111' : 'transparent',
         padding: '2.5rem',
-        transform: hovered ? 'scale(1.01) rotate(0.5deg)' : 'scale(1) rotate(0deg)',
-        transition: 'background-color 0.3s ease, transform 0.3s ease',
         cursor: 'default',
-        opacity: inView ? 1 : 0,
-        marginTop: inView ? '0' : '24px',
-        willChange: 'opacity, margin-top',
-        // Use CSS transition for fade-up
-        animationDelay: `${index * 0.12}s`,
+        transition: 'background-color 0.3s ease',
       }}
     >
       {/* Left border draw */}
       <div
+        ref={borderRef}
         style={{
           position: 'absolute',
           left: 0,
@@ -103,9 +146,7 @@ function ServiceCard({ service, locale, index }: ServiceCardProps) {
           width: '3px',
           height: '100%',
           backgroundColor: '#00A3CC',
-          transformOrigin: 'top',
-          transform: inView ? 'scaleY(1)' : 'scaleY(0)',
-          transition: `transform 0.4s var(--ease-out-expo) ${index * 0.12 + 0.1}s`,
+          transformOrigin: 'top center',
         }}
       />
 
@@ -169,9 +210,63 @@ function ServiceCard({ service, locale, index }: ServiceCardProps) {
 
 export default function ServicesSection({ locale, data }: { locale: string; data?: unknown }) {
   const isAr = locale === 'ar'
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useGSAP(() => {
+    if (!sectionRef.current) return
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (reducedMotion) {
+      gsap.set('.services-label', { opacity: 1, x: 0 })
+      gsap.set('.services-headline', { opacity: 1, y: 0 })
+      gsap.set('.service-card', { opacity: 1, y: 0 })
+      return
+    }
+
+    const triggerDefaults = {
+      trigger: sectionRef.current,
+      start: 'top 80%',
+      once: true,
+    }
+
+    // Section label
+    gsap.from('.services-label', {
+      x: -30,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: triggerDefaults,
+    })
+
+    // Section headline
+    gsap.from('.services-headline', {
+      y: 30,
+      opacity: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1,
+      scrollTrigger: triggerDefaults,
+    })
+
+    // Cards stagger entrance
+    gsap.from('.service-card', {
+      y: 40,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out',
+      stagger: 0.15,
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top 75%',
+        once: true,
+      },
+    })
+  }, { scope: sectionRef })
 
   return (
     <section
+      ref={sectionRef}
       style={{
         backgroundColor: '#0A0A0A',
         padding: '8rem 2rem',
@@ -182,6 +277,7 @@ export default function ServicesSection({ locale, data }: { locale: string; data
         {/* Header */}
         <div style={{ marginBottom: '4rem' }}>
           <p
+            className="services-label"
             style={{
               fontFamily: 'var(--font-space-grotesk), system-ui',
               fontSize: '0.6875rem',
@@ -198,6 +294,7 @@ export default function ServicesSection({ locale, data }: { locale: string; data
             {isAr ? 'ترسانتنا' : 'THE ARSENAL'}
           </p>
           <h2
+            className="services-headline"
             style={{
               fontFamily: 'var(--font-bebas-neue), system-ui',
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
