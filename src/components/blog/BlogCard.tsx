@@ -24,11 +24,11 @@ export default function BlogCard({ post, locale }: BlogCardProps) {
 
   return (
     <Link href={`/${locale}/blog/${post.slug}`} className="group block">
-      <article className="p-6 border border-[#1A1A1A] bg-transparent transition-all duration-300 group-hover:border-[#E8FF00] group-hover:-translate-y-1 flex flex-col gap-3">
+      <article className="p-6 border border-[#1A1A1A] bg-transparent transition-all duration-300 group-hover:border-[#00A3CC] group-hover:-translate-y-1 flex flex-col gap-3">
         {/* Category */}
         {category && (
           <span
-            className="text-[#E8FF00] text-xs uppercase tracking-widest"
+            className="text-[#00A3CC] text-xs uppercase tracking-widest"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {category}

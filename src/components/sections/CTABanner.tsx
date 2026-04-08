@@ -18,7 +18,7 @@ export default function CTABanner({ locale }: { locale: string }) {
     <section
       ref={ref as unknown as React.Ref<HTMLElement>}
       style={{
-        backgroundColor: '#E8FF00',
+        backgroundColor: '#00A3CC',
         padding: '8rem 2rem',
         position: 'relative',
         overflow: 'hidden',

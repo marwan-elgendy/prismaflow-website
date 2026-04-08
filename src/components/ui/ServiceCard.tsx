@@ -22,7 +22,7 @@ export default function ServiceCard({ number, title, problem, solution }: Servic
     >
       {/* Left border — animates in on scroll */}
       <motion.div
-        className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#E8FF00] origin-top"
+        className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#00A3CC] origin-top"
         initial={{ scaleY: 0 }}
         animate={{ scaleY: inView ? 1 : 0 }}
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}
@@ -30,7 +30,7 @@ export default function ServiceCard({ number, title, problem, solution }: Servic
 
       {/* Number */}
       <span
-        className="block text-[#E8FF00] text-xs mb-4 tracking-widest"
+        className="block text-[#00A3CC] text-xs mb-4 tracking-widest"
         style={{ fontFamily: 'var(--font-mono)' }}
       >
         {number}

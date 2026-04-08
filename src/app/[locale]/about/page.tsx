@@ -44,7 +44,7 @@ export default async function AboutPage({
       {/* ── HERO — full viewport ─────────────────────────────── */}
       <section className="min-h-screen flex flex-col justify-center px-6 md:px-16 max-w-7xl mx-auto">
         <span
-          className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-8"
+          className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-8"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           {isAr ? 'من نحن' : 'ABOUT'}
@@ -76,11 +76,11 @@ export default async function AboutPage({
         {/* Geometric prism decoration */}
         <div className="absolute right-0 top-0 w-1/2 h-screen pointer-events-none overflow-hidden" aria-hidden="true">
           <div
-            className="absolute top-1/4 right-[-10%] w-96 h-96 border border-[#E8FF00] opacity-5"
+            className="absolute top-1/4 right-[-10%] w-96 h-96 border border-[#00A3CC] opacity-5"
             style={{ transform: 'rotate(45deg)' }}
           />
           <div
-            className="absolute top-1/3 right-[5%] w-64 h-64 border border-[#E8FF00] opacity-10"
+            className="absolute top-1/3 right-[5%] w-64 h-64 border border-[#00A3CC] opacity-10"
             style={{ transform: 'rotate(30deg)' }}
           />
         </div>
@@ -100,8 +100,8 @@ export default async function AboutPage({
               }}
             >
               {isAr
-                ? <>تماماً كما يأخذ المنشور الزجاجي الضوء العادي ويحوّله إلى طيف — نفعل ذلك مع <span style={{ color: '#E8FF00' }}>رغبتك.</span></>
-                : <>Just as a prism takes ordinary light and turns it into a spectrum — we do that with <span style={{ color: '#E8FF00' }}>desire.</span></>}
+                ? <>تماماً كما يأخذ المنشور الزجاجي الضوء العادي ويحوّله إلى طيف — نفعل ذلك مع <span style={{ color: '#00A3CC' }}>رغبتك.</span></>
+                : <>Just as a prism takes ordinary light and turns it into a spectrum — we do that with <span style={{ color: '#00A3CC' }}>desire.</span></>}
             </p>
           </div>
 
@@ -139,7 +139,7 @@ export default async function AboutPage({
       <section className="py-32 bg-[#111111]">
         <div className="px-6 md:px-16 max-w-7xl mx-auto">
           <span
-            className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-16"
+            className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-16"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {isAr ? 'فلسفتنا' : 'OUR PHILOSOPHY'}
@@ -149,7 +149,7 @@ export default async function AboutPage({
             {/* 1 */}
             <div className="bg-[#111111] p-10">
               <span
-                className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+                className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
                 style={{ fontFamily: 'var(--font-mono)' }}
               >
                 01
@@ -173,7 +173,7 @@ export default async function AboutPage({
             {/* 2 */}
             <div className="bg-[#111111] p-10">
               <span
-                className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+                className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
                 style={{ fontFamily: 'var(--font-mono)' }}
               >
                 02
@@ -197,7 +197,7 @@ export default async function AboutPage({
             {/* 3 */}
             <div className="bg-[#111111] p-10">
               <span
-                className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+                className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
                 style={{ fontFamily: 'var(--font-mono)' }}
               >
                 03

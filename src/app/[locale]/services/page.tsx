@@ -199,7 +199,7 @@ export default async function ServicesPage({
           <section className="py-24 px-6 md:px-16 max-w-7xl mx-auto">
             <div className="mb-12">
               <span
-                className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-4"
+                className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-4"
                 style={{ fontFamily: 'var(--font-mono)' }}
               >
                 {svc.number}
@@ -225,7 +225,7 @@ export default async function ServicesPage({
               {/* How it works */}
               <div>
                 <span
-                  className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+                  className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
                   {svc.howLabel}
@@ -234,7 +234,7 @@ export default async function ServicesPage({
                   {svc.how.map((item, j) => (
                     <li key={j} className="flex gap-4 items-start">
                       <span
-                        className="text-[#E8FF00] shrink-0 mt-0.5"
+                        className="text-[#00A3CC] shrink-0 mt-0.5"
                         style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}
                       >
                         {String(j + 1).padStart(2, '0')}
@@ -253,13 +253,13 @@ export default async function ServicesPage({
               {/* Expected result */}
               <div className="border border-[#1A1A1A] p-8 flex flex-col gap-6">
                 <span
-                  className="block text-[#E8FF00] text-xs uppercase tracking-widest"
+                  className="block text-[#00A3CC] text-xs uppercase tracking-widest"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
                   {isAr ? 'النتيجة المتوقعة' : 'Expected Result'}
                 </span>
                 <p
-                  className="font-bold text-[#E8FF00] text-lg leading-relaxed"
+                  className="font-bold text-[#00A3CC] text-lg leading-relaxed"
                   style={{ fontFamily: 'var(--font-sans)' }}
                 >
                   {svc.result}
@@ -270,7 +270,7 @@ export default async function ServicesPage({
 
           {i < services.length - 1 && (
             <div className="max-w-7xl mx-auto px-6 md:px-16">
-              <div className="h-px bg-[#E8FF00] opacity-20" />
+              <div className="h-px bg-[#00A3CC] opacity-20" />
             </div>
           )}
         </div>
@@ -278,9 +278,9 @@ export default async function ServicesPage({
 
       {/* ── CASE STUDY TEASER ────────────────────────────────── */}
       <section className="py-24 px-6 md:px-16 max-w-7xl mx-auto">
-        <div className="border-l-4 border-[#E8FF00] pl-8 py-4">
+        <div className="border-l-4 border-[#00A3CC] pl-8 py-4">
           <span
-            className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-4"
+            className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-4"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {isAr ? 'من عملائنا' : 'CLIENT RESULT'}

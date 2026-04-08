@@ -80,14 +80,14 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
             fontSize: '0.6875rem',
             letterSpacing: '0.3em',
             textTransform: 'uppercase',
-            color: '#E8FF00',
+            color: '#00A3CC',
             marginBottom: '4rem',
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
           }}
         >
-          <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+          <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#00A3CC' }} />
           {isAr ? 'أصداء' : 'ECHOES'}
         </p>
 
@@ -175,7 +175,7 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
               style={{
                 width: idx === current ? '24px' : '8px',
                 height: '8px',
-                backgroundColor: idx === current ? '#E8FF00' : '#2A2A2A',
+                backgroundColor: idx === current ? '#00A3CC' : '#2A2A2A',
                 border: 'none',
                 borderRadius: '4px',
                 cursor: 'pointer',

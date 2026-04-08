@@ -39,7 +39,7 @@ export default function StatCounter({ value, label, suffix = '' }: StatCounterPr
   return (
     <div ref={ref} className="flex flex-col items-center gap-3">
       <div
-        className="text-[#E8FF00] leading-none tabular-nums"
+        className="text-[#00A3CC] leading-none tabular-nums"
         style={{
           fontFamily: 'var(--font-mono)',
           fontSize: 'clamp(4rem, 8vw, 8rem)',

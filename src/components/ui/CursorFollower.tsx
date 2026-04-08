@@ -60,7 +60,7 @@ export default function CursorFollower() {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          background-color: #E8FF00;
+          background-color: #00A3CC;
           pointer-events: none;
           z-index: 99999;
           opacity: 0;
@@ -78,7 +78,7 @@ export default function CursorFollower() {
           height: 80px;
           margin: -20px 0 0 -20px;
           background-color: #0A0A0A;
-          border: 1.5px solid #E8FF00;
+          border: 1.5px solid #00A3CC;
         }
         @media (hover: none) {
           #pf-cursor { display: none; }

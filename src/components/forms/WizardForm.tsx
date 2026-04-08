@@ -79,7 +79,7 @@ export default function WizardForm({ locale }: { locale: string }) {
       >
         <div className="text-center max-w-xl">
           <p
-            className="text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+            className="text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {isAr ? 'تم التقديم' : 'Application received'}
@@ -112,7 +112,7 @@ export default function WizardForm({ locale }: { locale: string }) {
       <div className="mb-12">
         <div className="flex items-center justify-between mb-3">
           <span
-            className="text-[#E8FF00] text-xs"
+            className="text-[#00A3CC] text-xs"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {progress}%
@@ -126,7 +126,7 @@ export default function WizardForm({ locale }: { locale: string }) {
         </div>
         <div className="h-px bg-[#1A1A1A] relative">
           <motion.div
-            className="absolute top-0 left-0 h-px bg-[#E8FF00]"
+            className="absolute top-0 left-0 h-px bg-[#00A3CC]"
             initial={{ width: '0%' }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -161,7 +161,7 @@ export default function WizardForm({ locale }: { locale: string }) {
               rows={5}
               required
               placeholder={isAr ? 'اكتب هنا...' : 'Type your answer...'}
-              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#E8FF00] transition-colors duration-200 resize-none"
+              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200 resize-none"
               style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
             />
           ) : step === 'budget' ? (
@@ -170,7 +170,7 @@ export default function WizardForm({ locale }: { locale: string }) {
               value={formData.budget}
               onChange={(e) => setFormData((d) => ({ ...d, budget: e.target.value }))}
               required
-              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#E8FF00] transition-colors duration-200 appearance-none cursor-pointer"
+              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200 appearance-none cursor-pointer"
               style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
             >
               <option value="" disabled>
@@ -193,7 +193,7 @@ export default function WizardForm({ locale }: { locale: string }) {
               onKeyDown={handleKeyDown}
               required
               placeholder={isAr ? 'اكتب هنا...' : 'Type your answer...'}
-              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#E8FF00] transition-colors duration-200"
+              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200"
               style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
             />
           )}

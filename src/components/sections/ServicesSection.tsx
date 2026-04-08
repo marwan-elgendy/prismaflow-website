@@ -102,7 +102,7 @@ function ServiceCard({ service, locale, index }: ServiceCardProps) {
           top: 0,
           width: '3px',
           height: '100%',
-          backgroundColor: '#E8FF00',
+          backgroundColor: '#00A3CC',
           transformOrigin: 'top',
           transform: inView ? 'scaleY(1)' : 'scaleY(0)',
           transition: `transform 0.4s var(--ease-out-expo) ${index * 0.12 + 0.1}s`,
@@ -114,7 +114,7 @@ function ServiceCard({ service, locale, index }: ServiceCardProps) {
         style={{
           fontFamily: 'var(--font-jetbrains-mono), monospace',
           fontSize: '0.75rem',
-          color: '#E8FF00',
+          color: '#00A3CC',
           marginBottom: '1.5rem',
           letterSpacing: '0.1em',
         }}
@@ -187,14 +187,14 @@ export default function ServicesSection({ locale, data }: { locale: string; data
               fontSize: '0.6875rem',
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
-              color: '#E8FF00',
+              color: '#00A3CC',
               marginBottom: '2rem',
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
             }}
           >
-            <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+            <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#00A3CC' }} />
             {isAr ? 'ترسانتنا' : 'THE ARSENAL'}
           </p>
           <h2

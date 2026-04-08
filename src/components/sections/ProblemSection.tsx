@@ -29,7 +29,7 @@ function StatCounter({ prefix = '', target, suffix = '', label, delay, start }: 
           fontFamily: 'var(--font-jetbrains-mono), monospace',
           fontSize: 'clamp(3.5rem, 8vw, 8rem)',
           lineHeight: 1,
-          color: '#E8FF00',
+          color: '#00A3CC',
           letterSpacing: '-0.04em',
           fontWeight: 700,
         }}
@@ -102,14 +102,14 @@ export default function ProblemSection({ locale, data }: { locale: string; data?
             fontSize: '0.6875rem',
             letterSpacing: '0.3em',
             textTransform: 'uppercase',
-            color: '#E8FF00',
+            color: '#00A3CC',
             marginBottom: '5rem',
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
           }}
         >
-          <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+          <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#00A3CC' }} />
           {isAr ? 'المشكلة' : 'THE PROBLEM'}
         </p>
 

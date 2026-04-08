@@ -90,8 +90,8 @@ export default function BlogPage() {
               style={{
                 fontFamily: 'var(--font-mono)',
                 color: activeCategory === cat ? '#0A0A0A' : '#555555',
-                backgroundColor: activeCategory === cat ? '#E8FF00' : 'transparent',
-                borderColor: activeCategory === cat ? '#E8FF00' : '#333333',
+                backgroundColor: activeCategory === cat ? '#00A3CC' : 'transparent',
+                borderColor: activeCategory === cat ? '#00A3CC' : '#333333',
                 borderRadius: 0,
               }}
             >
@@ -131,7 +131,7 @@ export default function BlogPage() {
               {/* Popular this month */}
               <div>
                 <span
-                  className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+                  className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
                   {isAr ? 'الأكثر قراءة' : 'Popular This Month'}
@@ -153,7 +153,7 @@ export default function BlogPage() {
               {/* Newsletter */}
               <div className="border border-[#1A1A1A] p-6">
                 <span
-                  className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-4"
+                  className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-4"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
                   {isAr ? 'النشرة البريدية' : 'Newsletter'}
@@ -168,7 +168,7 @@ export default function BlogPage() {
                 </p>
                 {subscribed ? (
                   <p
-                    className="text-[#E8FF00] text-sm"
+                    className="text-[#00A3CC] text-sm"
                     style={{ fontFamily: 'var(--font-mono)' }}
                   >
                     {isAr ? 'شكراً لاشتراكك.' : 'You\'re subscribed.'}
@@ -187,12 +187,12 @@ export default function BlogPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder={isAr ? 'بريدك الإلكتروني' : 'your@email.com'}
-                      className="w-full bg-[#111111] border border-[#333333] text-white px-4 py-3 text-sm outline-none focus:border-[#E8FF00] transition-colors duration-200"
+                      className="w-full bg-[#111111] border border-[#333333] text-white px-4 py-3 text-sm outline-none focus:border-[#00A3CC] transition-colors duration-200"
                       style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
                     />
                     <button
                       type="submit"
-                      className="w-full bg-[#E8FF00] text-[#0A0A0A] px-4 py-3 text-xs font-bold uppercase tracking-widest transition-opacity duration-200 hover:opacity-90"
+                      className="w-full bg-[#00A3CC] text-[#0A0A0A] px-4 py-3 text-xs font-bold uppercase tracking-widest transition-opacity duration-200 hover:opacity-90"
                       style={{ fontFamily: 'var(--font-mono)', borderRadius: 0 }}
                     >
                       {isAr ? 'اشترك' : 'Subscribe'}

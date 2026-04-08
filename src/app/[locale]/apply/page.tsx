@@ -40,7 +40,7 @@ export default async function ApplyPage({
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section className="py-24 px-6 md:px-16 max-w-7xl mx-auto">
         <span
-          className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-8"
+          className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-8"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           {isAr ? 'قدّم طلبك' : 'APPLY'}

@@ -100,7 +100,7 @@ function renderBody(text: string) {
       elements.push(
         <blockquote
           key={i}
-          className="border-l-4 border-[#E8FF00] pl-6 my-6 italic text-[#AAAAAA] text-xl leading-relaxed"
+          className="border-l-4 border-[#00A3CC] pl-6 my-6 italic text-[#AAAAAA] text-xl leading-relaxed"
           style={{ fontFamily: 'var(--font-body)' }}
         >
           {line.slice(2)}
@@ -110,7 +110,7 @@ function renderBody(text: string) {
       elements.push(
         <p
           key={i}
-          className="text-[#E8FF00] font-bold text-base mb-2 mt-6"
+          className="text-[#00A3CC] font-bold text-base mb-2 mt-6"
           style={{ fontFamily: 'var(--font-sans)' }}
         >
           {line.slice(2, -2)}
@@ -124,7 +124,7 @@ function renderBody(text: string) {
       const rendered = parts.map((part, j) => {
         if (part.startsWith('**') && part.endsWith('**')) {
           return (
-            <strong key={j} className="text-[#E8FF00]">
+            <strong key={j} className="text-[#00A3CC]">
               {part.slice(2, -2)}
             </strong>
           )
@@ -171,7 +171,7 @@ export default async function BlogPostPage({ params }: Props) {
       <div className="max-w-3xl mx-auto px-6 mb-10">
         <Link
           href={`/${locale}/blog`}
-          className="text-[#555555] text-xs uppercase tracking-widest hover:text-[#E8FF00] transition-colors duration-200"
+          className="text-[#555555] text-xs uppercase tracking-widest hover:text-[#00A3CC] transition-colors duration-200"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           {isAr ? 'العودة إلى المدونة ←' : '← Back to Lab Notes'}
@@ -182,7 +182,7 @@ export default async function BlogPostPage({ params }: Props) {
       <header className="max-w-3xl mx-auto px-6 mb-12">
         {category && (
           <span
-            className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-6"
+            className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-6"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {category}
@@ -226,7 +226,7 @@ export default async function BlogPostPage({ params }: Props) {
       {related.length > 0 && (
         <section className="mt-24 px-6 md:px-16 max-w-7xl mx-auto pb-24">
           <span
-            className="block text-[#E8FF00] text-xs uppercase tracking-widest mb-8"
+            className="block text-[#00A3CC] text-xs uppercase tracking-widest mb-8"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             {isAr ? 'مقالات ذات صلة' : 'Related Posts'}

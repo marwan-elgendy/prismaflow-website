@@ -51,7 +51,7 @@ function SVGConnector({ inView, isRtl }: { inView: boolean; isRtl: boolean }) {
         y1="1"
         x2={isRtl ? '25%' : '75%'}
         y2="1"
-        stroke="#E8FF00"
+        stroke="#00A3CC"
         strokeWidth="1.5"
         strokeDasharray="2000"
         strokeDashoffset={inView ? '0' : '2000'}
@@ -92,14 +92,14 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
               fontSize: '0.6875rem',
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
-              color: '#E8FF00',
+              color: '#00A3CC',
               marginBottom: '2rem',
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
             }}
           >
-            <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#E8FF00' }} />
+            <span style={{ display: 'inline-block', width: '8px', height: '8px', backgroundColor: '#00A3CC' }} />
             {isAr ? 'البروتوكول' : 'THE PROTOCOL'}
           </p>
           <h2
@@ -159,7 +159,7 @@ export default function ProcessSection({ locale, data }: { locale: string; data?
                   style={{
                     width: '8px',
                     height: '8px',
-                    backgroundColor: '#E8FF00',
+                    backgroundColor: '#00A3CC',
                     marginBottom: '1.25rem',
                     transform: inView ? 'scale(1)' : 'scale(0)',
                     transition: `transform 0.4s var(--ease-out-expo) ${i * 0.2 + 0.3}s`,

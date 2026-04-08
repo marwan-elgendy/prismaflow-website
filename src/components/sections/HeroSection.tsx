@@ -81,14 +81,14 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           fill="none"
           style={{ animation: 'pf-prism-spin 20s linear infinite' }}
         >
-          <polygon points="320,20 610,520 30,520" stroke="#E8FF00" strokeWidth="1.5" fill="none" />
-          <polygon points="320,80 550,490 90,490" stroke="#E8FF00" strokeWidth="0.8" fill="none" />
-          <polygon points="320,140 490,460 150,460" stroke="#E8FF00" strokeWidth="0.5" fill="none" />
-          <polygon points="320,200 430,430 210,430" stroke="#E8FF00" strokeWidth="0.3" fill="none" />
-          <line x1="320" y1="20" x2="320" y2="520" stroke="#E8FF00" strokeWidth="0.5" opacity="0.5" />
-          <line x1="30" y1="520" x2="610" y2="520" stroke="#E8FF00" strokeWidth="0.5" opacity="0.5" />
-          <line x1="320" y1="20" x2="610" y2="520" stroke="#E8FF00" strokeWidth="0.3" opacity="0.3" />
-          <line x1="320" y1="20" x2="30" y2="520" stroke="#E8FF00" strokeWidth="0.3" opacity="0.3" />
+          <polygon points="320,20 610,520 30,520" stroke="#00A3CC" strokeWidth="1.5" fill="none" />
+          <polygon points="320,80 550,490 90,490" stroke="#00A3CC" strokeWidth="0.8" fill="none" />
+          <polygon points="320,140 490,460 150,460" stroke="#00A3CC" strokeWidth="0.5" fill="none" />
+          <polygon points="320,200 430,430 210,430" stroke="#00A3CC" strokeWidth="0.3" fill="none" />
+          <line x1="320" y1="20" x2="320" y2="520" stroke="#00A3CC" strokeWidth="0.5" opacity="0.5" />
+          <line x1="30" y1="520" x2="610" y2="520" stroke="#00A3CC" strokeWidth="0.5" opacity="0.5" />
+          <line x1="320" y1="20" x2="610" y2="520" stroke="#00A3CC" strokeWidth="0.3" opacity="0.3" />
+          <line x1="320" y1="20" x2="30" y2="520" stroke="#00A3CC" strokeWidth="0.3" opacity="0.3" />
         </svg>
       </div>
 
@@ -166,7 +166,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
               display: 'inline-flex',
               alignItems: 'center',
               padding: '1rem 2.25rem',
-              background: '#E8FF00',
+              background: '#00A3CC',
               color: '#0A0A0A',
               fontFamily: 'var(--font-space-grotesk), system-ui',
               fontWeight: 700,
@@ -251,7 +251,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           fill="none"
           style={{ animation: 'pf-bounce 2s ease-in-out infinite' }}
         >
-          <path d="M1 1L7 7L13 1" stroke="#E8FF00" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M1 1L7 7L13 1" stroke="#00A3CC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
     </section>
