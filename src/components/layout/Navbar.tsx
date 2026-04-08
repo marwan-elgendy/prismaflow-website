@@ -156,8 +156,8 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden fixed inset-0 top-[73px] bg-[#0A0A0A] z-40 flex flex-col px-6 pt-12 pb-8"
-            style={{ backgroundColor: '#0A0A0A' }}
+            className="md:hidden flex flex-col px-6 pt-12 pb-8"
+            style={{ position: 'fixed', top: '73px', left: '0', right: '0', bottom: '0', backgroundColor: '#0A0A0A', zIndex: 40 }}
           >
             <div className="flex flex-col gap-0">
               {links.map((l, i) => {
