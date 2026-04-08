@@ -93,6 +93,7 @@ export default function Navbar() {
             src="/logo-transparent.png"
             alt="PrismaFlow"
             className="h-9 w-auto object-contain"
+            style={{ filter: 'brightness(1000%)' }}
           />
         </Link>
 

@@ -306,8 +306,8 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           maxWidth: '1400px',
           margin: '0 auto',
           padding: '0 2rem',
-          paddingTop: '9rem',
-          paddingBottom: '9rem',
+          paddingTop: '6rem',
+          paddingBottom: '6rem',
           width: '100%',
         }}
       >
@@ -317,7 +317,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           aria-label={headline}
           style={{
             fontFamily: 'var(--font-bebas-neue), system-ui',
-            fontSize: 'clamp(4.5rem, 20vw, 12rem)',
+            fontSize: 'clamp(3.5rem, 18vw, 12rem)',
             lineHeight: 0.85,
             letterSpacing: '-0.02em',
             color: '#F5F5F5',
