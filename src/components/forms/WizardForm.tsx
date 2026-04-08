@@ -153,49 +153,55 @@ export default function WizardForm({ locale }: { locale: string }) {
           </label>
 
           {step === 'challenge' ? (
-            <textarea
-              id={`field-${step}`}
-              value={formData.challenge}
-              onChange={(e) => setFormData((d) => ({ ...d, challenge: e.target.value }))}
-              onKeyDown={handleKeyDown}
-              rows={5}
-              required
-              placeholder={isAr ? 'اكتب هنا...' : 'Type your answer...'}
-              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200 resize-none"
-              style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
-            />
+            <div className="wizard-input-wrap">
+              <textarea
+                id={`field-${step}`}
+                value={formData.challenge}
+                onChange={(e) => setFormData((d) => ({ ...d, challenge: e.target.value }))}
+                onKeyDown={handleKeyDown}
+                rows={5}
+                required
+                placeholder={isAr ? 'اكتب هنا...' : 'Type your answer...'}
+                className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200 resize-none"
+                style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
+              />
+            </div>
           ) : step === 'budget' ? (
-            <select
-              id={`field-${step}`}
-              value={formData.budget}
-              onChange={(e) => setFormData((d) => ({ ...d, budget: e.target.value }))}
-              required
-              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200 appearance-none cursor-pointer"
-              style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
-            >
-              <option value="" disabled>
-                {isAr ? 'اختر...' : 'Select...'}
-              </option>
-              {BUDGET_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
+            <div className="wizard-input-wrap">
+              <select
+                id={`field-${step}`}
+                value={formData.budget}
+                onChange={(e) => setFormData((d) => ({ ...d, budget: e.target.value }))}
+                required
+                className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200 appearance-none cursor-pointer"
+                style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
+              >
+                <option value="" disabled>
+                  {isAr ? 'اختر...' : 'Select...'}
                 </option>
-              ))}
-            </select>
+                {BUDGET_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           ) : (
-            <input
-              id={`field-${step}`}
-              type={step === 'email' ? 'email' : 'text'}
-              value={formData[step]}
-              onChange={(e) =>
-                setFormData((d) => ({ ...d, [step]: e.target.value }))
-              }
-              onKeyDown={handleKeyDown}
-              required
-              placeholder={isAr ? 'اكتب هنا...' : 'Type your answer...'}
-              className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200"
-              style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
-            />
+            <div className="wizard-input-wrap">
+              <input
+                id={`field-${step}`}
+                type={step === 'email' ? 'email' : 'text'}
+                value={formData[step]}
+                onChange={(e) =>
+                  setFormData((d) => ({ ...d, [step]: e.target.value }))
+                }
+                onKeyDown={handleKeyDown}
+                required
+                placeholder={isAr ? 'اكتب هنا...' : 'Type your answer...'}
+                className="w-full bg-[#111111] border border-[#333333] text-white px-5 py-4 text-lg outline-none focus:border-[#00A3CC] transition-colors duration-200"
+                style={{ fontFamily: 'var(--font-body)', borderRadius: 0 }}
+              />
+            </div>
           )}
         </motion.div>
       </AnimatePresence>

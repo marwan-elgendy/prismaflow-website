@@ -57,7 +57,7 @@ export default function Navbar() {
               <Link
                 key={l.href}
                 href={l.href}
-                className={`relative text-xs tracking-wider uppercase pb-0.5 transition-colors duration-[var(--duration-normal)] ${
+                className={`nav-link-hover relative text-xs tracking-wider uppercase pb-0.5 transition-colors duration-[var(--duration-normal)] ${
                   isActive
                     ? 'text-[var(--text)]'
                     : 'text-[var(--text-muted)] hover:text-[var(--text)]'

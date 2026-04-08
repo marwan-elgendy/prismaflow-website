@@ -246,6 +246,99 @@ body::after {
   background-size: 200px 200px;
 }
 
+/* ─── Missing keyframes (used in components) ──────────────── */
+@keyframes pf-prism-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pf-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+
+/* ─── Floating ambient elements ─────────────────────────── */
+@keyframes pf-float-1 {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-20px); }
+}
+@keyframes pf-float-2 {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-15px); }
+}
+@keyframes pf-float-3 {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-25px); }
+}
+
+/* ─── SVG line draw ─────────────────────────────────────── */
+@keyframes pf-line-draw {
+  0%   { stroke-dashoffset: 1200; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ─── Testimonial progress bar ──────────────────────────── */
+@keyframes pf-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ─── Scroll Reveal ─────────────────────────────────────── */
+.sr-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.sr-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Nav link hover underline (scaleX) ─────────────────── */
+.nav-link-hover {
+  position: relative;
+}
+.nav-link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--prism);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.nav-link-hover:hover::after {
+  transform: scaleX(1);
+}
+
+/* ─── Testimonial progress line ─────────────────────────── */
+.testimonial-progress {
+  height: 2px;
+  background: var(--prism);
+  animation: pf-progress 4s linear forwards;
+}
+
+/* ─── WizardForm input focus glow line ──────────────────── */
+.wizard-input-wrap {
+  position: relative;
+}
+.wizard-input-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--prism);
+  transition: width 0.3s ease;
+}
+.wizard-input-wrap:focus-within::after {
+  width: 100%;
+}
+
 /* ─── Reduced motion ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

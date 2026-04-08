@@ -48,8 +48,20 @@ export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState(categories[0])
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [filtering, setFiltering] = useState(false)
+  const [displayCategory, setDisplayCategory] = useState(categories[0])
 
-  const filterKey = categoryMap[activeCategory]
+  const handleCategoryChange = (cat: string) => {
+    if (cat === activeCategory) return
+    setActiveCategory(cat) // update button styling immediately
+    setFiltering(true)
+    setTimeout(() => {
+      setDisplayCategory(cat)
+      setFiltering(false)
+    }, 200)
+  }
+
+  const filterKey = categoryMap[displayCategory]
   const filtered = filterKey
     ? staticPosts.filter((p) => p.categories.includes(filterKey))
     : staticPosts
@@ -85,13 +97,14 @@ export default function BlogPage() {
             <button
               key={cat}
               type="button"
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => handleCategoryChange(cat)}
               className="px-4 py-2 text-xs uppercase tracking-widest transition-all duration-200 border"
               style={{
                 fontFamily: 'var(--font-mono)',
                 color: activeCategory === cat ? '#0A0A0A' : '#555555',
                 backgroundColor: activeCategory === cat ? '#00A3CC' : 'transparent',
                 borderColor: activeCategory === cat ? '#00A3CC' : '#333333',
+                transition: 'color 0.2s, background-color 0.2s, border-color 0.2s',
                 borderRadius: 0,
               }}
             >
@@ -108,6 +121,7 @@ export default function BlogPage() {
           {/* Blog grid */}
           <div>
             <div className="h-px bg-[#1A1A1A] mb-12" />
+            <div style={{ opacity: filtering ? 0 : 1, transition: 'opacity 0.2s ease' }}>
             {filtered.length === 0 ? (
               <p
                 className="text-[#555555] py-12"
@@ -122,6 +136,7 @@ export default function BlogPage() {
                 ))}
               </div>
             )}
+            </div>
           </div>
 
           {/* Sidebar */}

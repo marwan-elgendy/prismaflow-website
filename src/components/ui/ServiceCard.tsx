@@ -17,7 +17,12 @@ export default function ServiceCard({ number, title, problem, solution }: Servic
     <motion.div
       ref={ref}
       className="relative p-8 border border-[#1A1A1A] bg-transparent"
-      whileHover={{ backgroundColor: '#111111', scale: 1.01, rotate: 0.5 }}
+      whileHover={{
+        backgroundColor: '#111111',
+        scale: 1.01,
+        rotate: 0.5,
+        boxShadow: '0 0 30px rgba(0, 163, 204, 0.15)',
+      }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       {/* Left border — animates in on scroll */}

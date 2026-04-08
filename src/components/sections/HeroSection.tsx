@@ -1,9 +1,13 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
+import { useMagneticEffect } from '@/hooks/useMagneticEffect'
 
 const EN_HEADLINE = 'ENGINEER DESIRE.'
 const AR_HEADLINE = 'هندسة الرغبة.'
+const EN_SUBLINE = 'Neuromarketing Agency — We engineer desire that doubles sales'
+const AR_SUBLINE = 'وكالة التسويق العصبي — نهندس الرغبة ونضاعف المبيعات'
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
 
 interface HeroSectionProps {
   locale: string
@@ -15,11 +19,16 @@ interface HeroSectionProps {
 export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel }: HeroSectionProps) {
   const isAr = locale === 'ar'
   const headline = isAr ? AR_HEADLINE : EN_HEADLINE
+  const sublineTarget = isAr ? AR_SUBLINE : EN_SUBLINE
+
   const [visibleChars, setVisibleChars] = useState(0)
   const [showContent, setShowContent] = useState(false)
+  const [scrambledSubline, setScrambledSubline] = useState(sublineTarget)
+  const scrambleRafRef = useRef<number>(0)
+  const primaryCtaRef = useMagneticEffect<HTMLAnchorElement>(80, 5)
 
+  // Headline char-by-char reveal
   useEffect(() => {
-    // Small delay before starting
     const delay = setTimeout(() => {
       let i = 0
       const interval = setInterval(() => {
@@ -34,6 +43,51 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
     }, 200)
     return () => clearTimeout(delay)
   }, [headline.length])
+
+  // Text scramble on subline when showContent becomes true
+  useEffect(() => {
+    if (!showContent) return
+    // Respect reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let iteration = 0
+    let lastTime = 0
+    const text = sublineTarget
+
+    const scramble = (timestamp: number) => {
+      if (timestamp - lastTime < 30) {
+        scrambleRafRef.current = requestAnimationFrame(scramble)
+        return
+      }
+      lastTime = timestamp
+
+      const result = text.split('').map((char, idx) => {
+        if (char === ' ' || char === '—') return char
+        if (idx < iteration) return char
+        return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+      }).join('')
+
+      setScrambledSubline(result)
+
+      if (iteration < text.length) {
+        iteration += 2
+        scrambleRafRef.current = requestAnimationFrame(scramble)
+      } else {
+        setScrambledSubline(text)
+      }
+    }
+
+    // Small delay so subline fade-in starts first
+    const timeout = setTimeout(() => {
+      scrambleRafRef.current = requestAnimationFrame(scramble)
+    }, 100)
+
+    return () => {
+      clearTimeout(timeout)
+      cancelAnimationFrame(scrambleRafRef.current)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showContent])
 
   const primaryLabel = primaryCTALabel || (isAr ? 'قدّم طلبك الآن' : 'Apply Now →')
   const secondaryLabel = secondaryCTALabel || (isAr ? 'اكتشف المزيد' : 'See How It Works')
@@ -60,6 +114,64 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           pointerEvents: 'none',
         }}
       />
+
+      {/* Floating ambient elements */}
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        {/* Circle 1 */}
+        <div style={{
+          position: 'absolute',
+          top: '15%',
+          left: isAr ? 'auto' : '8%',
+          right: isAr ? '8%' : 'auto',
+          width: '48px',
+          height: '48px',
+          border: '1px solid #00A3CC',
+          borderRadius: '50%',
+          opacity: 0.12,
+          animation: 'pf-float-1 6s ease-in-out infinite',
+        }} />
+        {/* Square */}
+        <div style={{
+          position: 'absolute',
+          top: '65%',
+          left: isAr ? 'auto' : '12%',
+          right: isAr ? '12%' : 'auto',
+          width: '20px',
+          height: '20px',
+          background: '#00A3CC',
+          opacity: 0.1,
+          animation: 'pf-float-2 8s ease-in-out infinite',
+          animationDelay: '1s',
+        }} />
+        {/* Circle 2 */}
+        <div style={{
+          position: 'absolute',
+          top: '35%',
+          left: isAr ? '18%' : 'auto',
+          right: isAr ? 'auto' : '20%',
+          width: '12px',
+          height: '12px',
+          background: '#00A3CC',
+          borderRadius: '50%',
+          opacity: 0.15,
+          animation: 'pf-float-3 7s ease-in-out infinite',
+          animationDelay: '2s',
+        }} />
+        {/* Diamond */}
+        <div style={{
+          position: 'absolute',
+          bottom: '25%',
+          left: isAr ? '5%' : 'auto',
+          right: isAr ? 'auto' : '8%',
+          width: '14px',
+          height: '14px',
+          border: '1px solid #00A3CC',
+          opacity: 0.12,
+          transform: 'rotate(45deg)',
+          animation: 'pf-float-1 9s ease-in-out infinite',
+          animationDelay: '3s',
+        }} />
+      </div>
 
       {/* Prism SVG decoration */}
       <div
@@ -130,7 +242,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           ))}
         </h1>
 
-        {/* Subline */}
+        {/* Subline with scramble effect */}
         <p
           style={{
             fontFamily: 'var(--font-space-grotesk), system-ui',
@@ -142,11 +254,10 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
             opacity: showContent ? 1 : 0,
             transform: showContent ? 'translateY(0)' : 'translateY(12px)',
             transition: 'opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo)',
+            fontVariantNumeric: 'tabular-nums',
           }}
         >
-          {isAr
-            ? 'وكالة التسويق العصبي — نهندس الرغبة ونضاعف المبيعات'
-            : 'Neuromarketing Agency — We engineer desire that doubles sales'}
+          {scrambledSubline}
         </p>
 
         {/* CTAs */}
@@ -161,6 +272,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
           }}
         >
           <Link
+            ref={primaryCtaRef}
             href={`/${locale}/apply`}
             style={{
               display: 'inline-flex',

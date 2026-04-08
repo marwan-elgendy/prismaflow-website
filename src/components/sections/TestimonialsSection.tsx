@@ -38,14 +38,22 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
   const isAr = locale === 'ar'
   const [current, setCurrent] = useState(0)
   const [hovered, setHovered] = useState(false)
+  // Key that resets the progress bar CSS animation on each slide change
+  const [progressKey, setProgressKey] = useState(0)
 
   useEffect(() => {
     if (hovered) return
     const interval = setInterval(() => {
       setCurrent(prev => (prev + 1) % testimonials.length)
+      setProgressKey(k => k + 1)
     }, 4000)
     return () => clearInterval(interval)
   }, [hovered])
+
+  const handleDotClick = (idx: number) => {
+    setCurrent(idx)
+    setProgressKey(k => k + 1)
+  }
 
   const t = testimonials[current]
 
@@ -158,31 +166,52 @@ export default function TestimonialsSection({ locale, data }: { locale: string; 
           })}
         </div>
 
-        {/* Dot indicators */}
+        {/* Dot indicators + progress line */}
         <div
           style={{
             display: 'flex',
             gap: '0.75rem',
             marginTop: '4rem',
-            paddingTop: '10rem', // space below absolute content
+            paddingTop: '10rem',
+            alignItems: 'center',
           }}
         >
           {testimonials.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrent(idx)}
-              aria-label={`Testimonial ${idx + 1}`}
-              style={{
-                width: idx === current ? '24px' : '8px',
-                height: '8px',
-                backgroundColor: idx === current ? '#00A3CC' : '#2A2A2A',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                padding: 0,
-                transition: 'width 0.3s ease, background-color 0.3s ease',
-              }}
-            />
+            <div key={idx} style={{ position: 'relative' }}>
+              <button
+                onClick={() => handleDotClick(idx)}
+                aria-label={`Testimonial ${idx + 1}`}
+                style={{
+                  width: idx === current ? '24px' : '8px',
+                  height: '8px',
+                  backgroundColor: idx === current ? '#00A3CC' : '#2A2A2A',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  padding: 0,
+                  transition: 'width 0.3s ease, background-color 0.3s ease',
+                  display: 'block',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                {/* Progress line inside active dot */}
+                {idx === current && (
+                  <span
+                    key={progressKey}
+                    className="testimonial-progress"
+                    style={{
+                      display: 'block',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      height: '100%',
+                      animationPlayState: hovered ? 'paused' : 'running',
+                    }}
+                  />
+                )}
+              </button>
+            </div>
           ))}
         </div>
       </div>
