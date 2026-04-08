@@ -343,3 +343,17 @@ body::after {
     scroll-behavior: auto !important;
   }
 }
+
+/* ─── Mobile section padding fix ────────────────────────────── */
+@media (max-width: 767px) {
+  .section-pad-lg,
+  section[style*="12rem"],
+  section[style*="8rem"] {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+  section[style*="10rem"] {
+    padding-top: 5rem !important;
+    padding-bottom: 5rem !important;
+  }
+}
