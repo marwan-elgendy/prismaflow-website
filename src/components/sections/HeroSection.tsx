@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -9,8 +9,6 @@ const EN_HEADLINE = 'ENGINEER DESIRE.'
 const AR_HEADLINE = 'هندسة الرغبة.'
 const EN_SUBLINE = 'Neuromarketing Agency — We engineer desire that doubles sales'
 const AR_SUBLINE = 'وكالة التسويق العصبي — نهندس الرغبة ونضاعف المبيعات'
-const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
-
 interface HeroSectionProps {
   locale: string
   data?: unknown
@@ -24,8 +22,6 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
   const sublineTarget = isAr ? AR_SUBLINE : EN_SUBLINE
 
   const [showContent, setShowContent] = useState(false)
-  const [scrambledSubline, setScrambledSubline] = useState(sublineTarget)
-  const scrambleRafRef = useRef<number>(0)
   const primaryCtaRef = useMagneticEffect<HTMLAnchorElement>(80, 5)
 
   const containerRef = useRef<HTMLElement>(null)
@@ -117,9 +113,19 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
       '>-0.3'
     )
 
-    // 5. On complete, trigger scramble
+    // 5. On complete, trigger fade-in for subline (no more scramble - buggy RAF race condition)
     tl.call(() => {
       setShowContent(true)
+      // Fade in subline cleanly — no more character scramble
+      if (sublineRef.current) {
+        gsap.to(sublineRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          delay: 0.1,
+        })
+      }
     })
 
     // Prism SVG spin
@@ -170,59 +176,6 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
       gsap.to(floatRef4.current, { y: -20, duration: 9, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 3 })
     }
   }, { scope: containerRef })
-
-  // Text scramble on subline when showContent becomes true
-  const runScramble = (show: boolean) => {
-    if (!show) return
-    if (typeof window === 'undefined') return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    let iteration = 0
-    let lastTime = 0
-    const text = sublineTarget
-
-    const scramble = (timestamp: number) => {
-      if (timestamp - lastTime < 30) {
-        scrambleRafRef.current = requestAnimationFrame(scramble)
-        return
-      }
-      lastTime = timestamp
-
-      const result = text
-        .split('')
-        .map((char, idx) => {
-          if (char === ' ' || char === '—') return char
-          if (idx < iteration) return char
-          return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
-        })
-        .join('')
-
-      setScrambledSubline(result)
-
-      if (iteration < text.length) {
-        iteration += 2
-        scrambleRafRef.current = requestAnimationFrame(scramble)
-      } else {
-        setScrambledSubline(text)
-      }
-    }
-
-    const timeout = setTimeout(() => {
-      scrambleRafRef.current = requestAnimationFrame(scramble)
-    }, 100)
-
-    return () => {
-      clearTimeout(timeout)
-      cancelAnimationFrame(scrambleRafRef.current)
-    }
-  }
-
-  // Run scramble when showContent becomes true
-  useEffect(() => {
-    if (!showContent) return
-    return runScramble(true) ?? undefined
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showContent])
 
   const primaryLabel = primaryCTALabel || (isAr ? 'قدّم طلبك الآن' : 'Apply Now →')
   const secondaryLabel = secondaryCTALabel || (isAr ? 'اكتشف المزيد' : 'See How It Works')
@@ -401,7 +354,7 @@ export default function HeroSection({ locale, primaryCTALabel, secondaryCTALabel
             fontVariantNumeric: 'tabular-nums',
           }}
         >
-          {scrambledSubline}
+          {sublineTarget}
         </p>
 
         {/* CTAs */}
